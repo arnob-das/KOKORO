@@ -43,16 +43,15 @@ int wall_y[30] = { 66, 131, 261, 326, 391, 521,
 int kokoro_x = 651;
 int kokoro_y = 131;
 
-
+// koko's image height & width
+int kokoHeight = 65;
+int kokoWidth = 65;
 
 // koko's direction wise image
 // koko_right = 1;
 // koro_left = 2;
 // koko_up = 3;
 // koko_down = 4;
-
-
-
 
 // show game resources
 void show_game_res()
@@ -63,7 +62,7 @@ void show_game_res()
 		iShowImage(i, 0, 65, 65, iLoadImage("images\\wall.png"));
 	}
 	// 10th row
-	for (int col = 325, row = 586; col < 975; col += 65)
+	for (int col = 325, row = 585; col < 975; col += 65)
 	{
 		iShowImage(col, row, 65, 65, iLoadImage("images\\wall.png"));
 	}
@@ -71,18 +70,26 @@ void show_game_res()
 	// Rest of the WALLS
 	for (int x = 0; x < 30; x++)
 	{
-		iShowImage(wall_X[x], wall_y[x], 65, 65, iLoadImage("images\\wall.png"));
+		if (x == 0)
+		{
+			iShowImage(wall_X[x], wall_y[x], 65, 65, iLoadImage("images\\wall.png"));
+		}
+		if (x != 0)
+		{
+			iShowImage(wall_X[x] - 1, wall_y[x] - 1, 65, 65, iLoadImage("images\\wall.png"));
+		}
 	}
+
+
+
 	// Floor
 	iShowImage(325, 196, 65, 65, iLoadImage("images\\Floor.png"));
 
 	// koko initial position
-	iShowImage(kokoro_x, kokoro_y, 65, 65, iLoadImage("images\\koko_right.png"));
+	iShowImage(kokoro_x, kokoro_y, kokoWidth, kokoHeight, iLoadImage("images\\koko_right.png"));
 
 	// ghost green
 	iShowImage(586, 261, 65, 65, iLoadImage("images\\ghost_green.png"));
-
-
 }
 
 // for menu screen hidden
@@ -113,7 +120,6 @@ void iDraw()
 	{
 		show_game_res();
 	}
-
 }
 
 /*function iMouseMove() is called when the user presses and drags the mouse.
@@ -214,50 +220,70 @@ GLUT_KEY_PAGE DOWN, GLUT_KEY_HOME, GLUT_KEY_END, GLUT_KEY_INSERT
 */
 void iSpecialKeyboard(unsigned char key)
 {
+
 	if (key == GLUT_KEY_RIGHT)
 	{
-		kokoro_x += 13;
+		kokoro_x += 65;
+		if (kokoro_x >= 975){
+			kokoWidth -= 65;
+		}
+		cout << kokoro_x << "   " << kokoro_y << endl;
+
 	}
 	if (key == GLUT_KEY_LEFT)
 	{
-		kokoro_x -= 13;
+		kokoro_x -= 65;
+		cout << kokoro_x << "   " << kokoro_y << endl;
+
 	}
 	if (key == GLUT_KEY_UP)
 	{
-		if (kokoro_y != 130 + 65){
-			kokoro_y += 13;
+		int trueUp = 1;
+		int x = 0;
+		while (x < 30)
+		{
+
+			if ((kokoro_y + 65 != wall_y[x]) && (kokoro_x + 65 != wall_X[x]))
+			{
+				kokoro_y += 65;
+				trueUp = 0;
+
+			}
+
+			if (trueUp != 0){
+				x++;
+			}
 		}
-		//
+		cout << kokoro_x << "   " << kokoro_y << endl;
+
 	}
 	if (key == GLUT_KEY_DOWN)
 	{
-		for (int i = 0; i < 30; i++){
-			if ((kokoro_y - 53 != wall_y[i]) && (kokoro_x != wall_X[i])){
-				kokoro_y -= 13;
-				return;
-			}
+		if (kokoro_y >= 66){
+			kokoro_y -= 65;
 		}
-		//kokoro_y -= 13;
+
+		cout << kokoro_x << "   " << kokoro_y << endl;
+
 	}
 
 	if (key == GLUT_KEY_END)
 	{
 		cout << "GLUT_KEY_END" << endl;
 	}
+
+
 }
 
+int main()
+{
 
-	int main()
-	{
-		
-		// initialize pacman window
-		iInitialize(screen_width, screen_height, "KOKORO");
+	// initialize pacman window
+	iInitialize(screen_width, screen_height, "KOKORO");
 
-		// machine starts here
-		iStart();
+	// machine starts here
+	iStart();
 
 
-		
-
-		return 0;
-	}
+	return 0;
+}
