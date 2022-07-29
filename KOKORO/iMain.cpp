@@ -17,40 +17,42 @@ int screen_height = 650;
 int start_bg_height = 650;
 int start_bg_width = 1300;
 
-
 // CO-ORDINATE OF WALL'S X AND Y AXIS
 int wall_X[30] = { 325, 325, 325, 325, 325, 325,
-					391,
-					456,
-					521, 521, 521, 521, 521,
-					586, 586,
-					651, 651,
-					716, 716, 716, 716, 716,
-					781,
-					846,
-					911, 911, 911, 911, 911, 911 
-				 };
+391,
+456,
+521, 521, 521, 521, 521,
+586, 586,
+651, 651,
+716, 716, 716, 716, 716,
+781,
+846,
+911, 911, 911, 911, 911, 911 };
 
 int wall_y[30] = { 66, 131, 261, 326, 391, 521,
-					131,
-					326,
-					197, 261, 326, 391, 521,
-					66, 196,
-					66, 196,
-					197, 261, 326, 391, 521,
-					326, 131,
-					66, 131, 261, 326, 391, 521
-				 };
+131,
+326,
+197, 261, 326, 391, 521,
+66, 196,
+66, 196,
+197, 261, 326, 391, 521,
+326, 131,
+66, 131, 261, 326, 391, 521 };
 
 // KoKo's initial co-ordinate
 int kokoro_x = 651;
 int kokoro_y = 131;
 
+
+
 // koko's direction wise image
-int koko_right = 1;
-int koro_left = 2;
-int koko_up = 3;
-int koko_down = 4;
+// koko_right = 1;
+// koro_left = 2;
+// koko_up = 3;
+// koko_down = 4;
+
+
+
 
 // show game resources
 void show_game_res()
@@ -79,6 +81,8 @@ void show_game_res()
 
 	// ghost green
 	iShowImage(586, 261, 65, 65, iLoadImage("images\\ghost_green.png"));
+
+
 }
 
 // for menu screen hidden
@@ -109,6 +113,7 @@ void iDraw()
 	{
 		show_game_res();
 	}
+
 }
 
 /*function iMouseMove() is called when the user presses and drags the mouse.
@@ -196,11 +201,6 @@ void iKeyboard(unsigned char key)
 	if (key == '\r')
 	{
 	}
-
-	if (key == '/esc')
-	{
-		cout << "hello" << endl;
-	}
 }
 
 /*
@@ -214,7 +214,6 @@ GLUT_KEY_PAGE DOWN, GLUT_KEY_HOME, GLUT_KEY_END, GLUT_KEY_INSERT
 */
 void iSpecialKeyboard(unsigned char key)
 {
-
 	if (key == GLUT_KEY_RIGHT)
 	{
 		kokoro_x += 13;
@@ -223,15 +222,22 @@ void iSpecialKeyboard(unsigned char key)
 	{
 		kokoro_x -= 13;
 	}
-
 	if (key == GLUT_KEY_UP)
 	{
-		kokoro_y += 13;
-		cout << kokoro_y << endl;
+		if (kokoro_y != 130 + 65){
+			kokoro_y += 13;
+		}
+		//
 	}
 	if (key == GLUT_KEY_DOWN)
 	{
-		kokoro_y -= 13;
+		for (int i = 0; i < 30; i++){
+			if ((kokoro_y - 53 != wall_y[i]) && (kokoro_x != wall_X[i])){
+				kokoro_y -= 13;
+				return;
+			}
+		}
+		//kokoro_y -= 13;
 	}
 
 	if (key == GLUT_KEY_END)
@@ -240,13 +246,18 @@ void iSpecialKeyboard(unsigned char key)
 	}
 }
 
-int main()
-{
-	// initialize pacman window
-	iInitialize(screen_width, screen_height, "KOKORO");
 
-	// machine starts here
-	iStart();
+	int main()
+	{
+		
+		// initialize pacman window
+		iInitialize(screen_width, screen_height, "KOKORO");
 
-	return 0;
-}
+		// machine starts here
+		iStart();
+
+
+		
+
+		return 0;
+	}
