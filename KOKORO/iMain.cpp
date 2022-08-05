@@ -18,30 +18,57 @@ int start_bg_height = 650;
 int start_bg_width = 1300;
 
 // CO-ORDINATE OF WALL'S X AND Y AXIS
-int wall_X[30] = { 325, 325, 325, 325, 325, 325,
-391,
-456,
-521, 521, 521, 521, 521,
-586, 586,
-651, 651,
-716, 716, 716, 716, 716,
-781,
-846,
-911, 911, 911, 911, 911, 911 };
+// int wall_X[30] = {325, 325, 325, 325, 325, 325,325,
+// 				  391,
+// 				  456,
+// 				  521, 521, 521, 521, 521,
+// 				  586, 586,
+// 				  651, 651,
+// 				  716, 716, 716, 716, 716,
+// 				  781,
+// 				  846,
+// 				  911, 911, 911, 911, 911, 911};
 
-int wall_y[30] = { 66, 131, 261, 326, 391, 521,
-131,
-326,
-197, 261, 326, 391, 521,
-66, 196,
-66, 196,
-197, 261, 326, 391, 521,
-326, 131,
-66, 131, 261, 326, 391, 521 };
+// int wall_y[30] = {0,66, 131, 261, 326, 391, 521,
+// 				  131,
+// 				  326,
+// 				  197, 261, 326, 391, 521,
+// 				  66, 196,
+// 				  66, 196,
+// 				  197, 261, 326, 391, 521,
+// 				  326,
+//				  131,
+// 				  66, 131, 261, 326, 391, 521};
+
+int wall_X[50] = {
+	325, 325, 325, 325, 325, 325, 325, 325, // 8
+	390, 390, 390,							// 3
+	455, 455, 455,							// 3
+	520, 520, 520, 520, 520, 520, 520,		// 7
+	585, 585, 585, 585,						// 4
+	650, 650, 650, 650,						// 4
+	715, 715, 715, 715, 715, 715, 715,		// 7
+	780, 780, 780,							// 3
+	845, 845, 845,							// 3
+	910, 910, 910, 910, 910, 910, 910, 910	// 8
+};
+
+int wall_y[50] = {
+	0, 65, 130, 260, 325, 390, 520, 585, // 8
+	0, 130, 585,						 // 3
+	0, 325, 585,						 // 3
+	0, 195, 260, 325, 390, 520, 585,	 // 7
+	0, 65, 195, 585,					 // 4
+	0, 65, 195, 585,					 // 4
+	0, 195, 260, 325, 390, 520, 585,	 // 7
+	0, 325, 585,						 // 3
+	0, 130, 585,						 // 3
+	0, 65, 130, 260, 325, 390, 520, 585	 // 8
+};
 
 // KoKo's initial co-ordinate
-int kokoro_x = 651;
-int kokoro_y = 131;
+int kokoro_x = 650;
+int kokoro_y = 130;
 
 // koko's image height & width
 int kokoHeight = 65;
@@ -57,18 +84,18 @@ int kokoWidth = 65;
 void show_game_res()
 {
 	// 1st row
-	for (int i = 325; i < 975; i += 65)
-	{
-		iShowImage(i, 0, 65, 65, iLoadImage("images\\wall.png"));
-	}
+	// for (int i = 325; i < 975; i += 65)
+	// {
+	// 	iShowImage(i, 0, 65, 65, iLoadImage("images\\wall.png"));
+	// }
 	// 10th row
-	for (int col = 325, row = 585; col < 975; col += 65)
-	{
-		iShowImage(col, row, 65, 65, iLoadImage("images\\wall.png"));
-	}
+	// for (int col = 325, row = 585; col < 975; col += 65)
+	// {
+	// 	iShowImage(col, row, 65, 65, iLoadImage("images\\wall.png"));
+	// }
 
 	// Rest of the WALLS
-	for (int x = 0; x < 30; x++)
+	for (int x = 0; x < 50; x++)
 	{
 		if (x == 0)
 		{
@@ -76,11 +103,9 @@ void show_game_res()
 		}
 		if (x != 0)
 		{
-			iShowImage(wall_X[x] - 1, wall_y[x] - 1, 65, 65, iLoadImage("images\\wall.png"));
+			iShowImage(wall_X[x], wall_y[x], 65, 65, iLoadImage("images\\wall.png"));
 		}
 	}
-
-
 
 	// Floor
 	iShowImage(325, 196, 65, 65, iLoadImage("images\\Floor.png"));
@@ -105,6 +130,10 @@ void show_menu_screen()
 	start_bg_height = 650;
 	start_bg_width = 1300;
 }
+
+// menu item height and width
+int menuItemHeight = 650;
+int menuItemWidth = 1300;
 
 //:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::Idraw Here::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::://
 
@@ -161,31 +190,47 @@ void iMouse(int button, int state, int mx, int my)
 			}
 
 			// high score menu item
-			if ((mx >= 132 && mx <= 354) && (my >= 273 && my <= 377))
+			else if ((mx >= 132 && mx <= 354) && (my >= 273 && my <= 377))
 			{
+
+				/// working on here ///
+				// iFilledRectangle(50, 60, 100, 100);
+				iText(50, 60, "This is a text", GLUT_BITMAP_TIMES_ROMAN_10);
+
+				hide_menu_screen();
+				iText(50, 60, "This is a text", GLUT_BITMAP_TIMES_ROMAN_10);
+
+				// iShowImage(0, 0, menuItemWidth, menuItemHeight, iLoadImage("images\\highScores.png"));
+
 				cout << "High Scores" << endl;
 			}
 
 			// Levels menu item
-			if ((mx >= 132 && mx <= 354) && (my >= 119 && my <= 222))
+			else if ((mx >= 132 && mx <= 354) && (my >= 119 && my <= 222))
 			{
 				cout << "Levels" << endl;
+				if (game_state == 0)
+				{
+					iShowImage(10, 10, menuItemWidth, menuItemHeight, iLoadImage("images\\highScores.png"));
+					// hide_menu_screen();
+					cout << "High Scores" << endl;
+				}
 			}
 
 			// Learn menu item
-			if ((mx >= 721 && mx <= 942) && (my >= 434 && my <= 538))
+			else if ((mx >= 721 && mx <= 942) && (my >= 434 && my <= 538))
 			{
 				cout << "Learn" << endl;
 			}
 
 			// about menu item
-			if ((mx >= 721 && mx <= 942) && (my >= 276 && my <= 380))
+			else if ((mx >= 721 && mx <= 942) && (my >= 276 && my <= 380))
 			{
 				cout << "About" << endl;
 			}
 
 			// quit menu item
-			if ((mx >= 721 && mx <= 942) && (my >= 118 && my <= 223))
+			else if ((mx >= 721 && mx <= 942) && (my >= 118 && my <= 223))
 			{
 				cout << "Quit" << endl;
 			}
@@ -224,17 +269,16 @@ void iSpecialKeyboard(unsigned char key)
 	if (key == GLUT_KEY_RIGHT)
 	{
 		kokoro_x += 65;
-		if (kokoro_x >= 975){
+		if (kokoro_x >= 975)
+		{
 			kokoWidth -= 65;
 		}
 		cout << kokoro_x << "   " << kokoro_y << endl;
-
 	}
 	if (key == GLUT_KEY_LEFT)
 	{
 		kokoro_x -= 65;
 		cout << kokoro_x << "   " << kokoro_y << endl;
-
 	}
 	if (key == GLUT_KEY_UP)
 	{
@@ -247,32 +291,29 @@ void iSpecialKeyboard(unsigned char key)
 			{
 				kokoro_y += 65;
 				trueUp = 0;
-
 			}
 
-			if (trueUp != 0){
+			if (trueUp != 0)
+			{
 				x++;
 			}
 		}
 		cout << kokoro_x << "   " << kokoro_y << endl;
-
 	}
 	if (key == GLUT_KEY_DOWN)
 	{
-		if (kokoro_y >= 66){
+		if (kokoro_y >= 66)
+		{
 			kokoro_y -= 65;
 		}
 
 		cout << kokoro_x << "   " << kokoro_y << endl;
-
 	}
 
 	if (key == GLUT_KEY_END)
 	{
 		cout << "GLUT_KEY_END" << endl;
 	}
-
-
 }
 
 int main()
@@ -283,7 +324,6 @@ int main()
 
 	// machine starts here
 	iStart();
-
 
 	return 0;
 }
