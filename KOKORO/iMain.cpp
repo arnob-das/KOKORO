@@ -17,29 +17,46 @@ int screen_height = 650;
 int start_bg_height = 650;
 int start_bg_width = 1300;
 
-// CO-ORDINATE OF WALL'S X AND Y AXIS
-// int wall_X[30] = {325, 325, 325, 325, 325, 325,325,
-// 				  391,
-// 				  456,
-// 				  521, 521, 521, 521, 521,
-// 				  586, 586,
-// 				  651, 651,
-// 				  716, 716, 716, 716, 716,
-// 				  781,
-// 				  846,
-// 				  911, 911, 911, 911, 911, 911};
+// wall width and height
+int wallWidthHeight[50] = {
+	65, 65, 65, 65, 65, 65, 65, 65, // 8
+	65, 65, 65,						// 3
+	65, 65, 65,						// 3
+	65, 65, 65, 65, 65, 65, 65,		// 7
+	65, 65, 65, 65,					// 4
+	65, 65, 65, 65,					// 4
+	65, 65, 65, 65, 65, 65, 65,		// 7
+	65, 65, 65,						// 3
+	65, 65, 65,						// 3
+	65, 65, 65, 65, 65, 65, 65, 65	// 8
+};
 
-// int wall_y[30] = {0,66, 131, 261, 326, 391, 521,
-// 				  131,
-// 				  326,
-// 				  197, 261, 326, 391, 521,
-// 				  66, 196,
-// 				  66, 196,
-// 				  197, 261, 326, 391, 521,
-// 				  326,
-//				  131,
-// 				  66, 131, 261, 326, 391, 521};
+// pil big width and height
+int pillBigWidthHeight[4] = { 65, 65, 65, 65 };
 
+// pill small width and height
+int pillSmallWidthHeight[31] = {
+	65, 65, 65,					// 3
+	65, 65, 65, 65, 65, 65, 65, // 7
+	65, 65, 65,					// 3
+	65, 65, 65,					// 3
+	65, 65,						// 2
+	65, 65, 65,					// 3
+	65, 65, 65, 65, 65, 65, 65, // 7
+	65, 65, 65					// 3
+};
+
+// floor width and height
+int floorWidthHeight[12] = {
+	65, 65, // 2
+	65, 65, // 2
+	65, 65, // 2
+	65, 65, // 2
+	65, 65, // 2
+	65, 65, // 2
+};
+
+// wall x co-ordinate
 int wall_X[50] = {
 	325, 325, 325, 325, 325, 325, 325, 325, // 8
 	390, 390, 390,							// 3
@@ -52,9 +69,9 @@ int wall_X[50] = {
 	845, 845, 845,							// 3
 	910, 910, 910, 910, 910, 910, 910, 910	// 8
 };
-
+// wall y co-ordinate
 int wall_y[50] = {
-	0, 65, 130, 260, 325, 390, 520, 585, // 8
+	0, 65, 130, 260, 325, 455, 520, 585, // 8
 	0, 130, 585,						 // 3
 	0, 325, 585,						 // 3
 	0, 195, 260, 325, 390, 520, 585,	 // 7
@@ -63,7 +80,57 @@ int wall_y[50] = {
 	0, 195, 260, 325, 390, 520, 585,	 // 7
 	0, 325, 585,						 // 3
 	0, 130, 585,						 // 3
-	0, 65, 130, 260, 325, 390, 520, 585	 // 8
+	0, 65, 130, 260, 325, 455, 520, 585	 // 8
+};
+
+// pill small x co-ordinate
+int pillSmall_x[31] = {
+	390, 390, 390,					   // 3
+	455, 455, 455, 455, 455, 455, 455, // 7
+	520, 520, 520,					   // 3
+	585, 585, 585,					   // 3
+	650, 650,						   // 2
+	715, 715, 715,					   // 3
+	780, 780, 780, 780, 780, 780, 780, // 7
+	845, 845, 845					   // 3
+};
+
+// pill small y co-ordinate
+int pillSmall_y[31] = {
+	260, 325, 455,					  // 3
+	65, 130, 195, 260, 390, 455, 520, // 7
+	65, 130, 455,					  // 3
+	130, 455, 520,					  // 3
+	455, 520,						  // 2
+	65, 130, 455,					  // 3
+	65, 130, 195, 260, 390, 455, 520, // 7
+	260, 325, 455					  // 3
+};
+
+// pill-big x co-ordinate
+int pillBig_x[4] = { 390, 390, 845, 845 };
+
+// pill-big y co-ordinate
+int pillBig_y[4] = { 65, 520, 65, 520 };
+
+// floor x co-ordinate
+int floor_x[12] = {
+	325, 325, // 2
+	390, 390, // 2
+	585, 585, // 2
+	650, 650, // 2
+	845, 845, // 2
+	910, 910, // 2
+};
+
+// floor y co-ordinate
+int floor_y[12] = {
+	195, 390, // 2
+	195, 390, // 2
+	325, 390, // 2
+	325, 390, // 2
+	195, 390, // 2
+	195, 390, // 2
 };
 
 // KoKo's initial co-ordinate
@@ -83,32 +150,30 @@ int kokoWidth = 65;
 // show game resources
 void show_game_res()
 {
-	// 1st row
-	// for (int i = 325; i < 975; i += 65)
-	// {
-	// 	iShowImage(i, 0, 65, 65, iLoadImage("images\\wall.png"));
-	// }
-	// 10th row
-	// for (int col = 325, row = 585; col < 975; col += 65)
-	// {
-	// 	iShowImage(col, row, 65, 65, iLoadImage("images\\wall.png"));
-	// }
-
 	// Rest of the WALLS
 	for (int x = 0; x < 50; x++)
 	{
-		if (x == 0)
-		{
-			iShowImage(wall_X[x], wall_y[x], 65, 65, iLoadImage("images\\wall.png"));
-		}
-		if (x != 0)
-		{
-			iShowImage(wall_X[x], wall_y[x], 65, 65, iLoadImage("images\\wall.png"));
-		}
+
+		iShowImage(wall_X[x], wall_y[x], wallWidthHeight[x], wallWidthHeight[x], iLoadImage("images\\wall.png"));
+	}
+
+	// pill big
+	for (int x = 0; x < 4; x++)
+	{
+		iShowImage(pillBig_x[x], pillBig_y[x], pillBigWidthHeight[x], pillBigWidthHeight[x], iLoadImage("images\\pillBig.png"));
+	}
+
+	// pill small
+	for (int x = 0; x < 31; x++)
+	{
+		iShowImage(pillSmall_x[x], pillSmall_y[x], pillSmallWidthHeight[x], pillSmallWidthHeight[x], iLoadImage("images\\pillSmall.png"));
 	}
 
 	// Floor
-	iShowImage(325, 196, 65, 65, iLoadImage("images\\Floor.png"));
+	for (int x = 0; x < 12; x++)
+	{
+		iShowImage(floor_x[x], floor_y[x], floorWidthHeight[x], floorWidthHeight[x], iLoadImage("images\\newFloor.png"));
+	}
 
 	// koko initial position
 	iShowImage(kokoro_x, kokoro_y, kokoWidth, kokoHeight, iLoadImage("images\\koko_right.png"));
@@ -265,47 +330,39 @@ GLUT_KEY_PAGE DOWN, GLUT_KEY_HOME, GLUT_KEY_END, GLUT_KEY_INSERT
 */
 void iSpecialKeyboard(unsigned char key)
 {
-
 	if (key == GLUT_KEY_RIGHT)
 	{
-		kokoro_x += 65;
-		if (kokoro_x >= 975)
-		{
-			kokoWidth -= 65;
+		if(kokoro_x <=845) {
+			kokoro_x += 65;
 		}
 		cout << kokoro_x << "   " << kokoro_y << endl;
 	}
+
 	if (key == GLUT_KEY_LEFT)
 	{
-		kokoro_x -= 65;
+		if(kokoro_x >= 390) {
+			kokoro_x -= 65;
+		}
 		cout << kokoro_x << "   " << kokoro_y << endl;
 	}
+
 	if (key == GLUT_KEY_UP)
 	{
-		int trueUp = 1;
-		int x = 0;
-		while (x < 30)
-		{
-
-			if ((kokoro_y + 65 != wall_y[x]) && (kokoro_x + 65 != wall_X[x]))
-			{
-				kokoro_y += 65;
-				trueUp = 0;
-			}
-
-			if (trueUp != 0)
-			{
-				x++;
-			}
+		if(kokoro_y <= 520) {
+			kokoro_y += 65;
 		}
 		cout << kokoro_x << "   " << kokoro_y << endl;
 	}
+
 	if (key == GLUT_KEY_DOWN)
 	{
-		if (kokoro_y >= 66)
-		{
+		if(kokoro_y >= 65) {
 			kokoro_y -= 65;
 		}
+		// if (kokoro_y >= 66)
+		//{
+		//	kokoro_y -= 65;
+		// }
 
 		cout << kokoro_x << "   " << kokoro_y << endl;
 	}
