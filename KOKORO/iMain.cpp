@@ -32,7 +32,7 @@ int wallWidthHeight[50] = {
 };
 
 // pil big width and height
-int pillBigWidthHeight[4] = { 65, 65, 65, 65 };
+int pillBigWidthHeight[4] = {65, 65, 65, 65};
 
 // pill small width and height
 int pillSmallWidthHeight[31] = {
@@ -108,10 +108,10 @@ int pillSmall_y[31] = {
 };
 
 // pill-big x co-ordinate
-int pillBig_x[4] = { 390, 390, 845, 845 };
+int pillBig_x[4] = {390, 390, 845, 845};
 
 // pill-big y co-ordinate
-int pillBig_y[4] = { 65, 520, 65, 520 };
+int pillBig_y[4] = {65, 520, 65, 520};
 
 // floor x co-ordinate
 int floor_x[12] = {
@@ -150,7 +150,7 @@ int kokoWidth = 65;
 // show game resources
 void show_game_res()
 {
-	// Rest of the WALLS
+	// WALLS
 	for (int x = 0; x < 50; x++)
 	{
 
@@ -331,8 +331,17 @@ GLUT_KEY_PAGE DOWN, GLUT_KEY_HOME, GLUT_KEY_END, GLUT_KEY_INSERT
 void iSpecialKeyboard(unsigned char key)
 {
 	if (key == GLUT_KEY_RIGHT)
-	{
-		if(kokoro_x <=845) {
+	{	
+		// move koko from right side to left side
+		if (kokoro_x == 910 && kokoro_y == 195) {
+			kokoro_x = 325;
+		}
+		else if (kokoro_x == 910 && kokoro_y == 390) {
+			kokoro_x = 325;
+		}
+		// moves koko to right
+		else if (kokoro_x <= 845)
+		{
 			kokoro_x += 65;
 		}
 		cout << kokoro_x << "   " << kokoro_y << endl;
@@ -340,7 +349,16 @@ void iSpecialKeyboard(unsigned char key)
 
 	if (key == GLUT_KEY_LEFT)
 	{
-		if(kokoro_x >= 390) {
+		// moves koko from left to right
+		if (kokoro_x == 325 && kokoro_y == 195) {
+			kokoro_x = 910;
+		}
+		else if (kokoro_x == 325 && kokoro_y == 390) {
+			kokoro_x = 910;
+		}
+		// moves koko to left
+		else if (kokoro_x >= 390)
+		{
 			kokoro_x -= 65;
 		}
 		cout << kokoro_x << "   " << kokoro_y << endl;
@@ -348,7 +366,8 @@ void iSpecialKeyboard(unsigned char key)
 
 	if (key == GLUT_KEY_UP)
 	{
-		if(kokoro_y <= 520) {
+		if (kokoro_y <= 520)
+		{
 			kokoro_y += 65;
 		}
 		cout << kokoro_x << "   " << kokoro_y << endl;
@@ -356,14 +375,10 @@ void iSpecialKeyboard(unsigned char key)
 
 	if (key == GLUT_KEY_DOWN)
 	{
-		if(kokoro_y >= 65) {
+		if (kokoro_y >= 65)
+		{
 			kokoro_y -= 65;
 		}
-		// if (kokoro_y >= 66)
-		//{
-		//	kokoro_y -= 65;
-		// }
-
 		cout << kokoro_x << "   " << kokoro_y << endl;
 	}
 
