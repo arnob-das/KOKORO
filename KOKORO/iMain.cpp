@@ -154,7 +154,7 @@ int floor_y[12] = {
 };
 
 // koko's easy move
-int kokoMovePosition_x[49] = {
+int kokoMovePosition_x[50] = {
     // pill small x co-ordinate
     390, 390, 390,                     // 3
     455, 455, 455, 455, 455, 455, 455, // 7
@@ -176,9 +176,13 @@ int kokoMovePosition_x[49] = {
     // only one empty space
     650, // 1
     // kono's initital x co-ordinate
-    650 };
+    650,
+    // ghost's x co-ordinate
+    585
 
-int kokoMovePosition_y[49] = {
+};
+
+int kokoMovePosition_y[50] = {
     // pill y co-ordinate
     260, 325, 455,                    // 3
     65, 130, 195, 260, 390, 455, 520, // 7
@@ -200,7 +204,9 @@ int kokoMovePosition_y[49] = {
     // only one empty space
     260, // 1
     // kono's initital y co-ordinate
-    130
+    130,
+    // ghost y co-ordinate
+    260
 
 };
 
@@ -264,9 +270,9 @@ void show_game_res()
     }
 
     // koko's initial position
-    
+
     //iShowImage(kokoro_x, kokoro_y, kokoWidth, kokoHeight, iLoadImage("images\\koko_right.png"));
-    
+
     // right direction koko
     if (kokoImgDirection == 1) {
         iShowImage(kokoro_x, kokoro_y, kokoWidth, kokoHeight, iLoadImage("images\\koko_right.png"));
@@ -283,10 +289,10 @@ void show_game_res()
     if (kokoImgDirection == 4) {
         iShowImage(kokoro_x, kokoro_y, kokoWidth, kokoHeight, iLoadImage("images\\koko_down.png"));
     }
-    
+
 
     // ghost green
-    iShowImage(586, 261, 65, 65, iLoadImage("images\\ghost_green.png"));
+    iShowImage(585, 260, 65, 65, iLoadImage("images\\ghost_green.png"));
 }
 
 // for menu screen hidden
@@ -486,7 +492,7 @@ void iSpecialKeyboard(unsigned char key)
         */
 
         // changing positions to right
-        for (int x = 0; x < 49; x++)
+        for (int x = 0; x < 50; x++)
         {
             if ((kokoro_x + 65 == kokoMovePosition_x[x]) && (kokoro_y == kokoMovePosition_y[x]))
             {
@@ -527,7 +533,7 @@ void iSpecialKeyboard(unsigned char key)
     {
         kokoImgDirection = 2;
         //*kokoImgDirectionPtr = 2;
-        
+
 
         // moves koko from left to right in same y co-ordinate
         if (kokoro_x == 325 && kokoro_y == 195)
@@ -539,7 +545,7 @@ void iSpecialKeyboard(unsigned char key)
             kokoro_x = 910;
         }
         // moves koko to left
-        for (int x = 0; x < 49; x++)
+        for (int x = 0; x < 50; x++)
         {
             if ((kokoro_x - 65 == kokoMovePosition_x[x]) && (kokoro_y == kokoMovePosition_y[x]))
             {
@@ -591,7 +597,7 @@ void iSpecialKeyboard(unsigned char key)
         */
 
         // changing positions to upward direction
-        for (int x = 0; x < 49; x++)
+        for (int x = 0; x < 50; x++)
         {
             if ((kokoro_x == kokoMovePosition_x[x]) && (kokoro_y + 65 == kokoMovePosition_y[x]))
             {
@@ -642,7 +648,7 @@ void iSpecialKeyboard(unsigned char key)
         */
 
         // changing positions to downward directions
-        for (int x = 0; x < 49; x++)
+        for (int x = 0; x < 50; x++)
         {
             if ((kokoro_x == kokoMovePosition_x[x]) && (kokoro_y - 65 == kokoMovePosition_y[x]))
             {
