@@ -1,13 +1,29 @@
 #include "iGraphics.h"
 //#include "function.h"
-#include <string>
 //#include "variable.h"
 
+#include <string>
 #include <iostream>
+#include <cstdlib>
+#include <cstring>
+#include <sstream>
 using namespace std;
+
+using std::cin;
+using std::cout;
+using std::endl;
+using std::string;
+using std::to_string;
 
 // game state
 int game_state = 0;
+
+// score
+int playerScore = 0;
+int *ptr = &playerScore;
+
+int pillBigValue = 20;
+int pillSmallValue = 10;
 
 /// for screen size
 int screen_width = 1300;
@@ -20,7 +36,6 @@ int start_bg_width = 1300;
 // KoKo's initial co-ordinate
 int kokoro_x = 650;
 int kokoro_y = 130;
-
 
 // wall width and height
 int wallWidthHeight[50] = {
@@ -37,7 +52,7 @@ int wallWidthHeight[50] = {
 };
 
 // pil big width and height
-int pillBigWidthHeight[4] = { 65, 65, 65, 65 };
+int pillBigWidthHeight[4] = {65, 65, 65, 65};
 
 // pill small width and height
 int pillSmallWidthHeight[31] = {
@@ -113,10 +128,10 @@ int pillSmall_y[31] = {
 };
 
 // pill-big x co-ordinate
-int pillBig_x[4] = { 390, 390, 845, 845 };
+int pillBig_x[4] = {390, 390, 845, 845};
 
 // pill-big y co-ordinate
-int pillBig_y[4] = { 65, 520, 65, 520 };
+int pillBig_y[4] = {65, 520, 65, 520};
 
 // floor x co-ordinate
 int floor_x[12] = {
@@ -148,7 +163,7 @@ int kokoMovePosition_x[49] = {
 	650, 650,						   // 2
 	715, 715, 715,					   // 3
 	780, 780, 780, 780, 780, 780, 780, // 7
-	845, 845, 845,				       // 3
+	845, 845, 845,					   // 3
 	// pill big x co-ordinate
 	390, 390, 845, 845,
 	// floor x co-ordinate
@@ -159,10 +174,10 @@ int kokoMovePosition_x[49] = {
 	845, 845, // 2
 	910, 910, // 2
 	// only one empty space
-	650,       // 1
+	650, // 1
 	// kono's initital x co-ordinate
-	650
-};
+	650};
+
 int kokoMovePosition_y[49] = {
 	// pill y co-ordinate
 	260, 325, 455,					  // 3
@@ -183,11 +198,26 @@ int kokoMovePosition_y[49] = {
 	195, 390, // 2
 	195, 390, // 2
 	// only one empty space
-	260,       // 1
-	// kono's initital x co-ordinate
+	260, // 1
+	// kono's initital y co-ordinate
 	130
 
 };
+
+// pill small score value
+int pillSmall_ScoreValue[31] = {
+	10, 10, 10,					// 3
+	10, 10, 10, 10, 10, 10, 10, // 7
+	10, 10, 10,					// 3
+	10, 10, 10,					// 3
+	10, 10,						// 2
+	10, 10, 10,					// 3
+	10, 10, 10, 10, 10, 10, 10, // 7
+	10, 10, 10					// 3
+};
+
+// pill big score value
+int pillBig_ScoreValue[4] = { 20, 20, 20, 20};
 
 // koko's image height & width
 int kokoHeight = 65;
@@ -264,8 +294,19 @@ void iDraw()
 	// show_game_res();
 	if (game_state == 1)
 	{
+		// rendering game user interface
 		show_game_res();
+
+		// score text
+		string str = to_string(*ptr); // convert int to string data type
+		char str1[100];				  // declare charracter array
+		strcpy_s(str1, str.c_str());  // copy string to a charracter array
+
+		iText(1075, 330, "SCORE : ", GLUT_BITMAP_TIMES_ROMAN_24);
+		iText(1180, 330, str1, GLUT_BITMAP_TIMES_ROMAN_24); // show that charracter array
 	}
+
+	cout << "game score:" << playerScore << endl;
 }
 
 /*function iMouseMove() is called when the user presses and drags the mouse.
@@ -382,6 +423,7 @@ GLUT_KEY_PAGE DOWN, GLUT_KEY_HOME, GLUT_KEY_END, GLUT_KEY_INSERT
 */
 void iSpecialKeyboard(unsigned char key)
 {
+
 	// RIGHT KEY PRESSED
 	if (key == GLUT_KEY_RIGHT)
 	{
@@ -398,39 +440,61 @@ void iSpecialKeyboard(unsigned char key)
 		/*
 		if ((kokoro_x + 65 == wall_X[0]) && (kokoro_y == wall_y[0])) {
 			cout << "position matches" << endl;
-			//kokoro_x += 65;
+			kokoro_x += 65;
 		}
 		else {
 			kokoro_x += 65;
 		}
 		if ((kokoro_x + 65 != wall_X[23]) && (kokoro_y != wall_y[23])) {
 			cout << "position matches" << endl;
-			//kokoro_x += 65;
+			kokoro_x += 65;
 		}
 		else {
 			kokoro_x += 65;
 		}
 		*/
 
-
-
+		// changing positions to right
 		for (int x = 0; x < 49; x++)
 		{
 			if ((kokoro_x + 65 == kokoMovePosition_x[x]) && (kokoro_y == kokoMovePosition_y[x]))
 			{
-				cout << "position matches" << endl;
+				// cout << "position matches" << endl;
 				kokoro_x += 65;
 				break;
 			}
 		}
+
+		// for eating pill big
+		for (int x = 0; x < 4; x++)
+		{
+			if (pillBig_x[x] == kokoro_x && pillBig_y[x] == kokoro_y)
+			{
+				// cout << "big pill found" << endl;
+				pillBigWidthHeight[x] = 0;
+				playerScore += pillBig_ScoreValue[x];
+				pillBig_ScoreValue[x] = 0;
+				// strcpy_s(str1, str.c_str()); // score to char array
+			}
+		}
+		// for eating small pill
+		for (int x = 0; x < 31; x++)
+		{
+			if (pillSmall_x[x] == kokoro_x && pillSmall_y[x] == kokoro_y)
+			{
+				// cout << "small pill found" << endl;
+				pillSmallWidthHeight[x] = 0;
+				playerScore += pillSmall_ScoreValue[x];
+				pillSmall_ScoreValue[x] = 0;
+				// strcpy_s(str1, str.c_str()); // score to char array
+			}
+		}
 	}
-
-
 
 	// LEFT KEY PRESSED
 	if (key == GLUT_KEY_LEFT)
 	{
-		// moves koko from left to right
+		// moves koko from left to right in same y co-ordinate
 		if (kokoro_x == 325 && kokoro_y == 195)
 		{
 			kokoro_x = 910;
@@ -444,13 +508,39 @@ void iSpecialKeyboard(unsigned char key)
 		{
 			if ((kokoro_x - 65 == kokoMovePosition_x[x]) && (kokoro_y == kokoMovePosition_y[x]))
 			{
-				cout << "position matches" << endl;
+				// cout << "position matches" << endl;
 				kokoro_x -= 65;
 				break;
 			}
 		}
+
+		// for eating pill big
+		for (int x = 0; x < 4; x++)
+		{
+			if (pillBig_x[x] == kokoro_x && pillBig_y[x] == kokoro_y)
+			{
+				cout << "big pill found" << endl;
+				pillBigWidthHeight[x] = 0;
+				playerScore += pillBig_ScoreValue[x];
+				pillBig_ScoreValue[x] = 0;
+				// strcpy_s(str1, str.c_str()); // score to char array
+			}
+		}
+		// for eating small pill
+		for (int x = 0; x < 31; x++)
+		{
+			if (pillSmall_x[x] == kokoro_x && pillSmall_y[x] == kokoro_y)
+			{
+				cout << "small pill found" << endl;
+				pillSmallWidthHeight[x] = 0;
+				playerScore += pillSmall_ScoreValue[x];
+				pillSmall_ScoreValue[x] = 0;
+				// strcpy_s(str1, str.c_str()); // score to char array
+			}
+		}
 	}
 
+	// UP KEY PRESSED
 	if (key == GLUT_KEY_UP)
 	{
 		/*
@@ -461,17 +551,44 @@ void iSpecialKeyboard(unsigned char key)
 		cout << kokoro_x << "   " << kokoro_y << endl;
 		*/
 
+		// changing positions to upward direction
 		for (int x = 0; x < 49; x++)
 		{
-			if ((kokoro_x == kokoMovePosition_x[x]) && (kokoro_y+65 == kokoMovePosition_y[x]))
+			if ((kokoro_x == kokoMovePosition_x[x]) && (kokoro_y + 65 == kokoMovePosition_y[x]))
 			{
-				cout << "position matches" << endl;
+				// cout << "position matches" << endl;
 				kokoro_y += 65;
 				break;
 			}
 		}
+
+		// for eating pill big
+		for (int x = 0; x < 4; x++)
+		{
+			if (pillBig_x[x] == kokoro_x && pillBig_y[x] == kokoro_y)
+			{
+				cout << "big pill found" << endl;
+				pillBigWidthHeight[x] = 0;
+				playerScore += pillBig_ScoreValue[x];
+				pillBig_ScoreValue[x] = 0;
+				// strcpy_s(str1, str.c_str()); // score to char array
+			}
+		}
+		// for eating small pill
+		for (int x = 0; x < 31; x++)
+		{
+			if (pillSmall_x[x] == kokoro_x && pillSmall_y[x] == kokoro_y)
+			{
+				cout << "small pill found" << endl;
+				pillSmallWidthHeight[x] = 0;
+				playerScore += pillSmall_ScoreValue[x];
+				pillSmall_ScoreValue[x] = 0;
+				// strcpy_s(str1, str.c_str()); // score to char array
+			}
+		}
 	}
 
+	// DOWN KEY PRESSED
 	if (key == GLUT_KEY_DOWN)
 	{
 		/*
@@ -482,26 +599,46 @@ void iSpecialKeyboard(unsigned char key)
 		cout << kokoro_x << "   " << kokoro_y << endl;
 		*/
 
+		// changing positions to downward directions
 		for (int x = 0; x < 49; x++)
 		{
 			if ((kokoro_x == kokoMovePosition_x[x]) && (kokoro_y - 65 == kokoMovePosition_y[x]))
 			{
-				cout << "position matches" << endl;
+				// cout << "position matches" << endl;
 				kokoro_y -= 65;
 				break;
 			}
 		}
-	}
 
-	if (key == GLUT_KEY_END)
-	{
-		cout << "GLUT_KEY_END" << endl;
+		// for eating pill big
+		for (int x = 0; x < 4; x++)
+		{
+			if (pillBig_x[x] == kokoro_x && pillBig_y[x] == kokoro_y)
+			{
+				cout << "big pill found" << endl;
+				pillBigWidthHeight[x] = 0;
+				playerScore += pillBig_ScoreValue[x];
+				pillBig_ScoreValue[x] = 0;
+				// strcpy_s(str1, str.c_str()); // score to char array
+			}
+		}
+		// for eating small pill
+		for (int x = 0; x < 31; x++)
+		{
+			if (pillSmall_x[x] == kokoro_x && pillSmall_y[x] == kokoro_y)
+			{
+				cout << "small pill found" << endl;
+				pillSmallWidthHeight[x] = 0;
+				playerScore += pillSmall_ScoreValue[x];
+				pillSmall_ScoreValue[x] = 0;
+				// strcpy_s(str1, str.c_str()); // score to char array
+			}
+		}
 	}
 }
 
 int main()
 {
-
 	// initialize KOKORO window
 	iInitialize(screen_width, screen_height, "KOKORO");
 
