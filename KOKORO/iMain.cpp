@@ -17,6 +17,11 @@ int screen_height = 650;
 int start_bg_height = 650;
 int start_bg_width = 1300;
 
+// KoKo's initial co-ordinate
+int kokoro_x = 650;
+int kokoro_y = 130;
+
+
 // wall width and height
 int wallWidthHeight[50] = {
 	65, 65, 65, 65, 65, 65, 65, 65, // 8
@@ -32,7 +37,7 @@ int wallWidthHeight[50] = {
 };
 
 // pil big width and height
-int pillBigWidthHeight[4] = {65, 65, 65, 65};
+int pillBigWidthHeight[4] = { 65, 65, 65, 65 };
 
 // pill small width and height
 int pillSmallWidthHeight[31] = {
@@ -108,10 +113,10 @@ int pillSmall_y[31] = {
 };
 
 // pill-big x co-ordinate
-int pillBig_x[4] = {390, 390, 845, 845};
+int pillBig_x[4] = { 390, 390, 845, 845 };
 
 // pill-big y co-ordinate
-int pillBig_y[4] = {65, 520, 65, 520};
+int pillBig_y[4] = { 65, 520, 65, 520 };
 
 // floor x co-ordinate
 int floor_x[12] = {
@@ -133,9 +138,56 @@ int floor_y[12] = {
 	195, 390, // 2
 };
 
-// KoKo's initial co-ordinate
-int kokoro_x = 650;
-int kokoro_y = 130;
+// koko's easy move
+int kokoMovePosition_x[49] = {
+	// pill small x co-ordinate
+	390, 390, 390,					   // 3
+	455, 455, 455, 455, 455, 455, 455, // 7
+	520, 520, 520,					   // 3
+	585, 585, 585,					   // 3
+	650, 650,						   // 2
+	715, 715, 715,					   // 3
+	780, 780, 780, 780, 780, 780, 780, // 7
+	845, 845, 845,				       // 3
+	// pill big x co-ordinate
+	390, 390, 845, 845,
+	// floor x co-ordinate
+	325, 325, // 2
+	390, 390, // 2
+	585, 585, // 2
+	650, 650, // 2
+	845, 845, // 2
+	910, 910, // 2
+	// only one empty space
+	650,       // 1
+	// kono's initital x co-ordinate
+	650
+};
+int kokoMovePosition_y[49] = {
+	// pill y co-ordinate
+	260, 325, 455,					  // 3
+	65, 130, 195, 260, 390, 455, 520, // 7
+	65, 130, 455,					  // 3
+	130, 455, 520,					  // 3
+	455, 520,						  // 2
+	65, 130, 455,					  // 3
+	65, 130, 195, 260, 390, 455, 520, // 7
+	260, 325, 455,					  // 3
+	// pill big y co-ordinate
+	65, 520, 65, 520,
+	// floor y co-ordinate
+	195, 390, // 2
+	195, 390, // 2
+	325, 390, // 2
+	325, 390, // 2
+	195, 390, // 2
+	195, 390, // 2
+	// only one empty space
+	260,       // 1
+	// kono's initital x co-ordinate
+	130
+
+};
 
 // koko's image height & width
 int kokoHeight = 65;
@@ -330,56 +382,115 @@ GLUT_KEY_PAGE DOWN, GLUT_KEY_HOME, GLUT_KEY_END, GLUT_KEY_INSERT
 */
 void iSpecialKeyboard(unsigned char key)
 {
+	// RIGHT KEY PRESSED
 	if (key == GLUT_KEY_RIGHT)
-	{	
+	{
 		// move koko from right side to left side
-		if (kokoro_x == 910 && kokoro_y == 195) {
-			kokoro_x = 325;
-		}
-		else if (kokoro_x == 910 && kokoro_y == 390) {
-			kokoro_x = 325;
-		}
-		// moves koko to right
-		else if (kokoro_x <= 845)
+		if (kokoro_x == 910 && kokoro_y == 195)
 		{
+			kokoro_x = 325;
+		}
+		else if (kokoro_x == 910 && kokoro_y == 390)
+		{
+			kokoro_x = 325;
+		}
+
+		/*
+		if ((kokoro_x + 65 == wall_X[0]) && (kokoro_y == wall_y[0])) {
+			cout << "position matches" << endl;
+			//kokoro_x += 65;
+		}
+		else {
 			kokoro_x += 65;
 		}
-		cout << kokoro_x << "   " << kokoro_y << endl;
+		if ((kokoro_x + 65 != wall_X[23]) && (kokoro_y != wall_y[23])) {
+			cout << "position matches" << endl;
+			//kokoro_x += 65;
+		}
+		else {
+			kokoro_x += 65;
+		}
+		*/
+
+
+
+		for (int x = 0; x < 49; x++)
+		{
+			if ((kokoro_x + 65 == kokoMovePosition_x[x]) && (kokoro_y == kokoMovePosition_y[x]))
+			{
+				cout << "position matches" << endl;
+				kokoro_x += 65;
+				break;
+			}
+		}
 	}
 
+
+
+	// LEFT KEY PRESSED
 	if (key == GLUT_KEY_LEFT)
 	{
 		// moves koko from left to right
-		if (kokoro_x == 325 && kokoro_y == 195) {
+		if (kokoro_x == 325 && kokoro_y == 195)
+		{
 			kokoro_x = 910;
 		}
-		else if (kokoro_x == 325 && kokoro_y == 390) {
+		if (kokoro_x == 325 && kokoro_y == 390)
+		{
 			kokoro_x = 910;
 		}
 		// moves koko to left
-		else if (kokoro_x >= 390)
+		for (int x = 0; x < 49; x++)
 		{
-			kokoro_x -= 65;
+			if ((kokoro_x - 65 == kokoMovePosition_x[x]) && (kokoro_y == kokoMovePosition_y[x]))
+			{
+				cout << "position matches" << endl;
+				kokoro_x -= 65;
+				break;
+			}
 		}
-		cout << kokoro_x << "   " << kokoro_y << endl;
 	}
 
 	if (key == GLUT_KEY_UP)
 	{
+		/*
 		if (kokoro_y <= 520)
 		{
 			kokoro_y += 65;
 		}
 		cout << kokoro_x << "   " << kokoro_y << endl;
+		*/
+
+		for (int x = 0; x < 49; x++)
+		{
+			if ((kokoro_x == kokoMovePosition_x[x]) && (kokoro_y+65 == kokoMovePosition_y[x]))
+			{
+				cout << "position matches" << endl;
+				kokoro_y += 65;
+				break;
+			}
+		}
 	}
 
 	if (key == GLUT_KEY_DOWN)
 	{
+		/*
 		if (kokoro_y >= 65)
 		{
 			kokoro_y -= 65;
 		}
 		cout << kokoro_x << "   " << kokoro_y << endl;
+		*/
+
+		for (int x = 0; x < 49; x++)
+		{
+			if ((kokoro_x == kokoMovePosition_x[x]) && (kokoro_y - 65 == kokoMovePosition_y[x]))
+			{
+				cout << "position matches" << endl;
+				kokoro_y -= 65;
+				break;
+			}
+		}
 	}
 
 	if (key == GLUT_KEY_END)
@@ -391,7 +502,7 @@ void iSpecialKeyboard(unsigned char key)
 int main()
 {
 
-	// initialize pacman window
+	// initialize KOKORO window
 	iInitialize(screen_width, screen_height, "KOKORO");
 
 	// machine starts here
