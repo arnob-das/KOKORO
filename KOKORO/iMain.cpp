@@ -18,6 +18,10 @@ using std::to_string;
 // game state
 int game_state = 0;
 
+// play music
+int playMusic = 0;
+int* playMusicPtr = &playMusic;
+
 // score
 int playerScore = 0;
 int* playerScorePtr = &playerScore;
@@ -422,6 +426,14 @@ void iMouse(int button, int state, int mx, int my)
                 // and when game state == 1
                 // then game resources function will be called and show the interfaces
                 game_state = 1;
+
+                // set play music value to 1
+                playMusic = 1;
+                *playMusicPtr = 1;
+
+                if (playMusic == 1) {
+                    PlaySound("musics//playGameMusic.wav", NULL, SND_LOOP | SND_ASYNC);
+                }
             }
 
             // high score menu item
@@ -484,8 +496,16 @@ key- holds the ASCII value of the key pressed.
 
 void iKeyboard(unsigned char key)
 {
-    if (key == '\r')
+    if (key == '\m')
     {
+        if (playMusic) {
+            playMusic = 0;
+            PlaySound(0, 0, 0);
+        }
+        else {
+            playMusic = 1;
+            PlaySound("musics//playGameMusic.wav", NULL, SND_LOOP | SND_ASYNC);
+        }
     }
 
     // escape button
@@ -1311,7 +1331,6 @@ void iSpecialKeyboard(unsigned char key)
 
 int main()
 {
-
     // initialize KOKORO window
     iInitialize(screen_width, screen_height, "KOKORO GAME");
 
