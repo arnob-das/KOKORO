@@ -17,6 +17,7 @@ using std::to_string;
 
 // game state
 int game_state = 0;
+int* gameStatePtr = &game_state;
 
 // play music
 int playMusic = 0;
@@ -26,7 +27,9 @@ int* playMusicPtr = &playMusic;
 int playerScore = 0;
 int* playerScorePtr = &playerScore;
 
+// pill big power
 int pillBigValue = 20;
+//pill small power
 int pillSmallValue = 10;
 
 /// for screen size
@@ -183,7 +186,7 @@ int kokoMovePosition_x[50] = {
     650, 650,                     // 2
     715, 715, 715,                // 3
     780, 780, 780, 780, 780, 780, // 6
-    845, 845,           // 2
+    845, 845,                     // 2
     // pill big x co-ordinate
     390, 390, 845, 845,
     // floor x co-ordinate
@@ -217,7 +220,7 @@ int kokoMovePosition_y[50] = {
     455, 520,                    // 2
     65, 130, 455,                // 3
     65, 130, 195, 260, 390, 455, // 6
-    325, 455,                     // 2
+    325, 455,                    // 2
     // pill big y co-ordinate
     65, 520, 65, 520,
     // floor y co-ordinate
@@ -274,9 +277,12 @@ int kokoWidth = 65;
 // koko's image direction initially right direction
 int kokoImgDirection = 1;
 
+// menu image variable
+
 // show game resources
 void show_game_res()
 {
+    
     // WALLS
     for (int x = 0; x < 50; x++)
     {
@@ -303,8 +309,6 @@ void show_game_res()
     }
 
     // koko's initial position
-
-    // iShowImage(kokoro_x, kokoro_y, kokoWidth, kokoHeight, iLoadImage("images\\koko_right.png"));
 
     // right direction koko
     if (kokoImgDirection == 1)
@@ -373,21 +377,13 @@ void iDraw()
         show_game_res();
 
         // score text
-        string str = to_string(*playerScorePtr); // convert int to string data type
-        char str1[100];                          // declare charracter array
-        strcpy_s(str1, str.c_str());             // copy string to a charracter array
+        string scoreString = to_string(*playerScorePtr); // convert int to string data type
+        char scoreText[100];                          // declare charracter array
+        strcpy_s(scoreText, scoreString.c_str());             // copy string to a charracter array
 
         iText(1075, 330, "SCORE : ", GLUT_BITMAP_TIMES_ROMAN_24);
-        iText(1180, 330, str1, GLUT_BITMAP_TIMES_ROMAN_24); // show that charracter array
+        iText(1180, 330, scoreText, GLUT_BITMAP_TIMES_ROMAN_24); // show that charracter array
     }
-
-    // show random number and testing rand() in cpp
-    // cout << rand() % 4 << endl;
-
-    // cout << kokoImgDirection << endl;
-    // cout << *kokoImgDirectionPtr << endl;
-
-    // cout << "game score:" << playerScore << endl;
 }
 
 /*function iMouseMove() is called when the user presses and drags the mouse.
@@ -431,7 +427,8 @@ void iMouse(int button, int state, int mx, int my)
                 playMusic = 1;
                 *playMusicPtr = 1;
 
-                if (playMusic == 1) {
+                if (playMusic == 1)
+                {
                     PlaySound("musics//playGameMusic.wav", NULL, SND_LOOP | SND_ASYNC);
                 }
             }
@@ -439,15 +436,6 @@ void iMouse(int button, int state, int mx, int my)
             // high score menu item
             else if ((mx >= 132 && mx <= 354) && (my >= 273 && my <= 377))
             {
-
-                /// working on here ///
-                // iFilledRectangle(50, 60, 100, 100);
-                iText(50, 60, "This is a text", GLUT_BITMAP_TIMES_ROMAN_10);
-
-                hide_menu_screen();
-                iText(50, 60, "This is a text", GLUT_BITMAP_TIMES_ROMAN_10);
-
-                // iShowImage(0, 0, menuItemWidth, menuItemHeight, iLoadImage("images\\highScores.png"));
 
                 cout << "High Scores" << endl;
             }
@@ -498,21 +486,19 @@ void iKeyboard(unsigned char key)
 {
     if (key == '\m')
     {
-        if (playMusic) {
+        // controlling music
+        if (playMusic)
+        {
             playMusic = 0;
             PlaySound(0, 0, 0);
         }
-        else {
+        else
+        {
             playMusic = 1;
             PlaySound("musics//playGameMusic.wav", NULL, SND_LOOP | SND_ASYNC);
         }
     }
 
-    // escape button
-    if (key == 27)
-    {
-        cout << "pressed esc" << endl;
-    }
 }
 
 // control ghost green function
@@ -537,14 +523,7 @@ void controlGhostGreen()
         {
             if ((ghost_green_x + 65 == kokoMovePosition_x[x]) && (ghost_green_y == kokoMovePosition_y[x]))
             {
-                ghost_green_x += 65;
-
-                // checking if ghost hits koko
-                // if ((ghost_green_x == kokoro_x) && (ghost_green_y == kokoro_y)) {
-                //    playerScore -= ghostGreenPower;
-                //}
-
-                break;
+                ghost_green_x += 65;break;
             }
         }
 
@@ -561,15 +540,7 @@ void controlGhostGreen()
         {
             if ((ghost_green_x - 65 == kokoMovePosition_x[x]) && (ghost_green_y == kokoMovePosition_y[x]))
             {
-                ghost_green_x -= 65;
-                // checking if ghost hits koko
-                /*
-                * if ((ghost_green_x == kokoro_x) && (ghost_green_y == kokoro_y)) {
-                    playerScore -= ghostGreenPower;
-                }
-                */
-
-                break;
+                ghost_green_x -= 65;break;
             }
         }
         if ((ghost_green_x == kokoro_x) && (ghost_green_y == kokoro_y))
@@ -585,14 +556,7 @@ void controlGhostGreen()
         {
             if ((ghost_green_x == kokoMovePosition_x[x]) && (ghost_green_y + 65 == kokoMovePosition_y[x]))
             {
-                ghost_green_y += 65;
-                // checking if ghost hits koko
-                /*
-                if ((ghost_green_x == kokoro_x) && (ghost_green_y == kokoro_y)) {
-                    playerScore -= ghostGreenPower;
-                }
-                */
-                break;
+                ghost_green_y += 65;break;
             }
         }
         if ((ghost_green_x == kokoro_x) && (ghost_green_y == kokoro_y))
@@ -608,14 +572,7 @@ void controlGhostGreen()
         {
             if ((ghost_green_x == kokoMovePosition_x[x]) && (ghost_green_y - 65 == kokoMovePosition_y[x]))
             {
-                ghost_green_y -= 65;
-                // checking if ghost hits koko
-                /*
-                * if ((ghost_green_x == kokoro_x) && (ghost_green_y == kokoro_y)) {
-                    playerScore -= ghostGreenPower;
-                }
-                */
-                break;
+                ghost_green_y -= 65;break;
             }
         }
 
@@ -647,14 +604,7 @@ void controlGhostRed()
         {
             if ((ghost_red_x + 65 == kokoMovePosition_x[x]) && (ghost_red_y == kokoMovePosition_y[x]))
             {
-                ghost_red_x += 65;
-
-                // checking if ghost hits koko
-                // if ((ghost_green_x == kokoro_x) && (ghost_green_y == kokoro_y)) {
-                //    playerScore -= ghostGreenPower;
-                //}
-
-                break;
+                ghost_red_x += 65;break;
             }
         }
 
@@ -671,15 +621,7 @@ void controlGhostRed()
         {
             if ((ghost_red_x - 65 == kokoMovePosition_x[x]) && (ghost_red_y == kokoMovePosition_y[x]))
             {
-                ghost_red_x -= 65;
-                // checking if ghost hits koko
-                /*
-                * if ((ghost_green_x == kokoro_x) && (ghost_green_y == kokoro_y)) {
-                    playerScore -= ghostGreenPower;
-                }
-                */
-
-                break;
+                ghost_red_x -= 65;break;
             }
         }
         if ((ghost_red_x == kokoro_x) && (ghost_red_y == kokoro_y))
@@ -696,12 +638,6 @@ void controlGhostRed()
             if ((ghost_red_x == kokoMovePosition_x[x]) && (ghost_red_y + 65 == kokoMovePosition_y[x]))
             {
                 ghost_red_y += 65;
-                // checking if ghost hits koko
-                /*
-                if ((ghost_green_x == kokoro_x) && (ghost_green_y == kokoro_y)) {
-                    playerScore -= ghostGreenPower;
-                }
-                */
                 break;
             }
         }
@@ -719,12 +655,6 @@ void controlGhostRed()
             if ((ghost_red_x == kokoMovePosition_x[x]) && (ghost_red_y - 65 == kokoMovePosition_y[x]))
             {
                 ghost_red_y -= 65;
-                // checking if ghost hits koko
-                /*
-                * if ((ghost_green_x == kokoro_x) && (ghost_green_y == kokoro_y)) {
-                    playerScore -= ghostGreenPower;
-                }
-                */
                 break;
             }
         }
@@ -758,12 +688,6 @@ void controlGhostViolet()
             if ((ghost_violet_x + 65 == kokoMovePosition_x[x]) && (ghost_violet_y == kokoMovePosition_y[x]))
             {
                 ghost_violet_x += 65;
-
-                // checking if ghost hits koko
-                // if ((ghost_green_x == kokoro_x) && (ghost_green_y == kokoro_y)) {
-                //    playerScore -= ghostGreenPower;
-                //}
-
                 break;
             }
         }
@@ -782,13 +706,6 @@ void controlGhostViolet()
             if ((ghost_violet_x - 65 == kokoMovePosition_x[x]) && (ghost_violet_y == kokoMovePosition_y[x]))
             {
                 ghost_violet_x -= 65;
-                // checking if ghost hits koko
-                /*
-                * if ((ghost_green_x == kokoro_x) && (ghost_green_y == kokoro_y)) {
-                    playerScore -= ghostGreenPower;
-                }
-                */
-
                 break;
             }
         }
@@ -806,12 +723,6 @@ void controlGhostViolet()
             if ((ghost_violet_x == kokoMovePosition_x[x]) && (ghost_violet_y + 65 == kokoMovePosition_y[x]))
             {
                 ghost_violet_y += 65;
-                // checking if ghost hits koko
-                /*
-                if ((ghost_green_x == kokoro_x) && (ghost_green_y == kokoro_y)) {
-                    playerScore -= ghostGreenPower;
-                }
-                */
                 break;
             }
         }
@@ -829,12 +740,6 @@ void controlGhostViolet()
             if ((ghost_violet_x == kokoMovePosition_x[x]) && (ghost_violet_y - 65 == kokoMovePosition_y[x]))
             {
                 ghost_violet_y -= 65;
-                // checking if ghost hits koko
-                /*
-                * if ((ghost_green_x == kokoro_x) && (ghost_green_y == kokoro_y)) {
-                    playerScore -= ghostGreenPower;
-                }
-                */
                 break;
             }
         }
@@ -868,12 +773,6 @@ void controlGhostOrange()
             if ((ghost_orange_x + 65 == kokoMovePosition_x[x]) && (ghost_orange_y == kokoMovePosition_y[x]))
             {
                 ghost_orange_x += 65;
-
-                // checking if ghost hits koko
-                // if ((ghost_green_x == kokoro_x) && (ghost_green_y == kokoro_y)) {
-                //    playerScore -= ghostGreenPower;
-                //}
-
                 break;
             }
         }
@@ -892,13 +791,6 @@ void controlGhostOrange()
             if ((ghost_orange_x - 65 == kokoMovePosition_x[x]) && (ghost_orange_y == kokoMovePosition_y[x]))
             {
                 ghost_orange_x -= 65;
-                // checking if ghost hits koko
-                /*
-                * if ((ghost_green_x == kokoro_x) && (ghost_green_y == kokoro_y)) {
-                    playerScore -= ghostGreenPower;
-                }
-                */
-
                 break;
             }
         }
@@ -916,12 +808,6 @@ void controlGhostOrange()
             if ((ghost_orange_x == kokoMovePosition_x[x]) && (ghost_orange_y + 65 == kokoMovePosition_y[x]))
             {
                 ghost_orange_y += 65;
-                // checking if ghost hits koko
-                /*
-                if ((ghost_green_x == kokoro_x) && (ghost_green_y == kokoro_y)) {
-                    playerScore -= ghostGreenPower;
-                }
-                */
                 break;
             }
         }
@@ -939,12 +825,6 @@ void controlGhostOrange()
             if ((ghost_orange_x == kokoMovePosition_x[x]) && (ghost_orange_y - 65 == kokoMovePosition_y[x]))
             {
                 ghost_orange_y -= 65;
-                // checking if ghost hits koko
-                /*
-                * if ((ghost_green_x == kokoro_x) && (ghost_green_y == kokoro_y)) {
-                    playerScore -= ghostGreenPower;
-                }
-                */
                 break;
             }
         }
@@ -978,12 +858,6 @@ void controlGhostPink()
             if ((ghost_pink_x + 65 == kokoMovePosition_x[x]) && (ghost_pink_y == kokoMovePosition_y[x]))
             {
                 ghost_pink_x += 65;
-
-                // checking if ghost hits koko
-                // if ((ghost_green_x == kokoro_x) && (ghost_green_y == kokoro_y)) {
-                //    playerScore -= ghostGreenPower;
-                //}
-
                 break;
             }
         }
@@ -1002,13 +876,6 @@ void controlGhostPink()
             if ((ghost_pink_x - 65 == kokoMovePosition_x[x]) && (ghost_pink_y == kokoMovePosition_y[x]))
             {
                 ghost_pink_x -= 65;
-                // checking if ghost hits koko
-                /*
-                * if ((ghost_green_x == kokoro_x) && (ghost_green_y == kokoro_y)) {
-                    playerScore -= ghostGreenPower;
-                }
-                */
-
                 break;
             }
         }
@@ -1026,12 +893,6 @@ void controlGhostPink()
             if ((ghost_pink_x == kokoMovePosition_x[x]) && (ghost_pink_y + 65 == kokoMovePosition_y[x]))
             {
                 ghost_pink_y += 65;
-                // checking if ghost hits koko
-                /*
-                if ((ghost_green_x == kokoro_x) && (ghost_green_y == kokoro_y)) {
-                    playerScore -= ghostGreenPower;
-                }
-                */
                 break;
             }
         }
@@ -1049,12 +910,6 @@ void controlGhostPink()
             if ((ghost_pink_x == kokoMovePosition_x[x]) && (ghost_pink_y - 65 == kokoMovePosition_y[x]))
             {
                 ghost_pink_y -= 65;
-                // checking if ghost hits koko
-                /*
-                * if ((ghost_green_x == kokoro_x) && (ghost_green_y == kokoro_y)) {
-                    playerScore -= ghostGreenPower;
-                }
-                */
                 break;
             }
         }
@@ -1087,16 +942,10 @@ GLUT_KEY_PAGE DOWN, GLUT_KEY_HOME, GLUT_KEY_END, GLUT_KEY_INSERT
 */
 void iSpecialKeyboard(unsigned char key)
 {
-    // controling ghost
-    // testing purpose
-
+    // controling kokoro
     // RIGHT KEY PRESSED
     if (key == GLUT_KEY_RIGHT)
     {
-        // controlling ghost
-        controlGhost();
-
-        // sets koko img direction to 1 for right direction
         kokoImgDirection = 1;
 
         // move koko from right side to left side
@@ -1109,29 +958,11 @@ void iSpecialKeyboard(unsigned char key)
             kokoro_x = 325;
         }
 
-        /*
-        if ((kokoro_x + 65 == wall_X[0]) && (kokoro_y == wall_y[0])) {
-            cout << "position matches" << endl;
-            kokoro_x += 65;
-        }
-        else {
-            kokoro_x += 65;
-        }
-        if ((kokoro_x + 65 != wall_X[23]) && (kokoro_y != wall_y[23])) {
-            cout << "position matches" << endl;
-            kokoro_x += 65;
-        }
-        else {
-            kokoro_x += 65;
-        }
-        */
-
         // changing positions to right
         for (int x = 0; x < 50; x++)
         {
             if ((kokoro_x + 65 == kokoMovePosition_x[x]) && (kokoro_y == kokoMovePosition_y[x]))
             {
-                // cout << "position matches" << endl;
                 kokoro_x += 65;
                 break;
             }
@@ -1142,11 +973,9 @@ void iSpecialKeyboard(unsigned char key)
         {
             if (pillBig_x[x] == kokoro_x && pillBig_y[x] == kokoro_y)
             {
-                // cout << "big pill found" << endl;
                 pillBigWidthHeight[x] = 0;
                 playerScore += pillBig_ScoreValue[x];
                 pillBig_ScoreValue[x] = 0;
-                // strcpy_s(str1, str.c_str()); // score to char array
             }
         }
         // for eating small pill
@@ -1154,11 +983,9 @@ void iSpecialKeyboard(unsigned char key)
         {
             if (pillSmall_x[x] == kokoro_x && pillSmall_y[x] == kokoro_y)
             {
-                // cout << "small pill found" << endl;
                 pillSmallWidthHeight[x] = 0;
                 playerScore += pillSmall_ScoreValue[x];
                 pillSmall_ScoreValue[x] = 0;
-                // strcpy_s(str1, str.c_str()); // score to char array
             }
         }
     }
@@ -1166,12 +993,10 @@ void iSpecialKeyboard(unsigned char key)
     // LEFT KEY PRESSED
     if (key == GLUT_KEY_LEFT)
     {
-        // controlling ghost
-        controlGhost();
+        // controlling koko
 
         // sets koko img direction to 2 for left direction
         kokoImgDirection = 2;
-        //*kokoImgDirectionPtr = 2;
 
         // moves koko from left to right in same y co-ordinate
         if (kokoro_x == 325 && kokoro_y == 195)
@@ -1197,11 +1022,9 @@ void iSpecialKeyboard(unsigned char key)
         {
             if (pillBig_x[x] == kokoro_x && pillBig_y[x] == kokoro_y)
             {
-                // cout << "big pill found" << endl;
                 pillBigWidthHeight[x] = 0;
                 playerScore += pillBig_ScoreValue[x];
                 pillBig_ScoreValue[x] = 0;
-                // strcpy_s(str1, str.c_str()); // score to char array
             }
         }
         // for eating small pill
@@ -1209,11 +1032,9 @@ void iSpecialKeyboard(unsigned char key)
         {
             if (pillSmall_x[x] == kokoro_x && pillSmall_y[x] == kokoro_y)
             {
-                // cout << "small pill found" << endl;
                 pillSmallWidthHeight[x] = 0;
                 playerScore += pillSmall_ScoreValue[x];
                 pillSmall_ScoreValue[x] = 0;
-                // strcpy_s(str1, str.c_str()); // score to char array
             }
         }
     }
@@ -1222,26 +1043,14 @@ void iSpecialKeyboard(unsigned char key)
     if (key == GLUT_KEY_UP)
     {
 
-        // controlling ghost
-        controlGhost();
+        // controlling koko
 
-        // sets koko img direction to 3 for up direction
         kokoImgDirection = 3;
 
-        /*
-        if (kokoro_y <= 520)
-        {
-            kokoro_y += 65;
-        }
-        cout << kokoro_x << "   " << kokoro_y << endl;
-        */
-
-        // changing positions to upward direction
         for (int x = 0; x < 50; x++)
         {
             if ((kokoro_x == kokoMovePosition_x[x]) && (kokoro_y + 65 == kokoMovePosition_y[x]))
             {
-                // cout << "position matches" << endl;
                 kokoro_y += 65;
                 break;
             }
@@ -1252,11 +1061,9 @@ void iSpecialKeyboard(unsigned char key)
         {
             if (pillBig_x[x] == kokoro_x && pillBig_y[x] == kokoro_y)
             {
-                // cout << "big pill found" << endl;
                 pillBigWidthHeight[x] = 0;
                 playerScore += pillBig_ScoreValue[x];
                 pillBig_ScoreValue[x] = 0;
-                // strcpy_s(str1, str.c_str()); // score to char array
             }
         }
         // for eating small pill
@@ -1264,11 +1071,9 @@ void iSpecialKeyboard(unsigned char key)
         {
             if (pillSmall_x[x] == kokoro_x && pillSmall_y[x] == kokoro_y)
             {
-                // cout << "small pill found" << endl;
                 pillSmallWidthHeight[x] = 0;
                 playerScore += pillSmall_ScoreValue[x];
                 pillSmall_ScoreValue[x] = 0;
-                // strcpy_s(str1, str.c_str()); // score to char array
             }
         }
     }
@@ -1277,26 +1082,17 @@ void iSpecialKeyboard(unsigned char key)
     if (key == GLUT_KEY_DOWN)
     {
 
-        // controlling ghost
-        controlGhost();
+        // controlling koko
 
         // sets koko img direction to 4 for down direction
         kokoImgDirection = 4;
 
-        /*
-        if (kokoro_y >= 65)
-        {
-            kokoro_y -= 65;
-        }
-        cout << kokoro_x << "   " << kokoro_y << endl;
-        */
 
         // changing positions to downward directions
         for (int x = 0; x < 50; x++)
         {
             if ((kokoro_x == kokoMovePosition_x[x]) && (kokoro_y - 65 == kokoMovePosition_y[x]))
             {
-                // cout << "position matches" << endl;
                 kokoro_y -= 65;
                 break;
             }
@@ -1307,11 +1103,9 @@ void iSpecialKeyboard(unsigned char key)
         {
             if (pillBig_x[x] == kokoro_x && pillBig_y[x] == kokoro_y)
             {
-                // cout << "big pill found" << endl;
                 pillBigWidthHeight[x] = 0;
                 playerScore += pillBig_ScoreValue[x];
                 pillBig_ScoreValue[x] = 0;
-                // strcpy_s(str1, str.c_str()); // score to char array
             }
         }
         // for eating small pill
@@ -1319,11 +1113,9 @@ void iSpecialKeyboard(unsigned char key)
         {
             if (pillSmall_x[x] == kokoro_x && pillSmall_y[x] == kokoro_y)
             {
-                // cout << "small pill found" << endl;
                 pillSmallWidthHeight[x] = 0;
                 playerScore += pillSmall_ScoreValue[x];
                 pillSmall_ScoreValue[x] = 0;
-                // strcpy_s(str1, str.c_str()); // score to char array
             }
         }
     }
@@ -1331,11 +1123,14 @@ void iSpecialKeyboard(unsigned char key)
 
 int main()
 {
-    // initialize KOKORO window
+    // set control ghost function after every 500 ms
+    iSetTimer(500, controlGhost);
+    //  initialize KOKORO window
     iInitialize(screen_width, screen_height, "KOKORO GAME");
+
 
     // machine starts here
     iStart();
-
+    
     return 0;
 }
