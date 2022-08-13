@@ -366,7 +366,6 @@ void iDraw()
     }
 
     // play game
-    // show_game_res();
     else if (*menuItemPtr == menu[1])
     {
         // controlling ghost game depending on exitVar == 0
@@ -424,10 +423,27 @@ void iDraw()
             flag = 0;
         }
     }
+    // checking if game completed or not
     if (flag == 1)
     {
         cout << "game completed" << endl;
-        // level = 2;
+        level = 2;
+
+        // stop the control ghost function because first level is completed
+        exitVar = 1;
+
+        // next level button background
+        iSetColor(255, 255, 255);
+        iFilledRectangle(1075, 50, 150, 65);
+        // next level button text
+        iSetColor(0, 0, 0);
+        iText(1095, 73, "Next Level", GLUT_BITMAP_TIMES_ROMAN_24);
+    }
+
+    // if player score is 0, then stop game
+    if (*playerScorePtr <= 0)
+    {
+        exitVar = 1;
     }
 }
 
@@ -513,7 +529,7 @@ key- holds the ASCII value of the key pressed.
 
 void iKeyboard(unsigned char key)
 {
-    if (key == 109)
+    if (key == 109) // m
     {
         // controlling music
         if (playMusic)
@@ -527,7 +543,7 @@ void iKeyboard(unsigned char key)
             PlaySound("musics//playGameMusic.wav", NULL, SND_LOOP | SND_ASYNC);
         }
     }
-    else if (key == 8)
+    else if (key == 8) // backspace
     {
         if (menuItem = menu[1])
         {
