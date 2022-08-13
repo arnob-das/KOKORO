@@ -344,6 +344,15 @@ int* menuItemPtr = &menuItem;
 int menuItemHeight = 650;
 int menuItemWidth = 1300;
 
+// exit function
+void exit()
+{
+    exit(0);
+}
+
+// exit variable
+int exitVar = 0;
+
 //:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::Idraw Here::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::://
 
 void iDraw()
@@ -360,6 +369,8 @@ void iDraw()
     // show_game_res();
     else if (*menuItemPtr == menu[1])
     {
+        // controlling ghost game depending on exitVar == 0
+        exitVar = 0;
         // rendering game user interface
         show_game_res();
 
@@ -518,6 +529,10 @@ void iKeyboard(unsigned char key)
     }
     else if (key == 8)
     {
+        if (menuItem = menu[1])
+        {
+            exitVar = 1;
+        }
         *menuItemPtr = 0;
     }
 }
@@ -526,7 +541,6 @@ void iKeyboard(unsigned char key)
 
 void controlGhostGreen()
 {
-
     // ghost and koko hits themselves
     // koko will lose 10 points
     int ghostGreenPower = 10;
@@ -951,11 +965,14 @@ void controlGhostPink()
 // control ghost
 void controlGhost()
 {
-    controlGhostGreen();
-    controlGhostRed();
-    controlGhostViolet();
-    controlGhostOrange();
-    controlGhostPink();
+    if (exitVar == 0)
+    {
+        controlGhostGreen();
+        controlGhostRed();
+        controlGhostViolet();
+        controlGhostOrange();
+        controlGhostPink();
+    }
 }
 
 /*
