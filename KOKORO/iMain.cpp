@@ -29,7 +29,7 @@ int* playerScorePtr = &playerScore;
 
 // pill big power
 int pillBigValue = 20;
-//pill small power
+// pill small power
 int pillSmallValue = 10;
 
 /// for screen size
@@ -282,7 +282,7 @@ int kokoImgDirection = 1;
 // show game resources
 void show_game_res()
 {
-    
+
     // WALLS
     for (int x = 0; x < 50; x++)
     {
@@ -343,19 +343,12 @@ void show_game_res()
     iShowImage(ghost_pink_x, ghost_pink_y, 65, 65, iLoadImage("images\\ghost_pink.png"));
 }
 
-// for menu screen hidden
-void hide_menu_screen()
-{
-    start_bg_height = 0;
-    start_bg_width = 0;
-}
+// menu array
+int menu[7] = { 0, 1, 2, 3, 4, 5, 6 };
 
-// for menu screen shown
-void show_menu_screen()
-{
-    start_bg_height = 650;
-    start_bg_width = 1300;
-}
+int menuItem = menu[0];
+int* menuItemPtr = &menuItem;
+
 
 // menu item height and width
 int menuItemHeight = 650;
@@ -368,21 +361,53 @@ void iDraw()
     iClear();
 
     // start background
-    iShowImage(0, 0, start_bg_width, start_bg_height, iLoadImage("images\\start_bg.png"));
+    if (*menuItemPtr == menu[0])
+    {
+        iShowImage(0, 0, start_bg_width, start_bg_height, iLoadImage("images\\start_bg.png"));
+    }
 
     // show_game_res();
-    if (game_state == 1)
+    // play game
+    else if (*menuItemPtr == menu[1])
     {
         // rendering game user interface
         show_game_res();
 
         // score text
         string scoreString = to_string(*playerScorePtr); // convert int to string data type
-        char scoreText[100];                          // declare charracter array
-        strcpy_s(scoreText, scoreString.c_str());             // copy string to a charracter array
+        char scoreText[100];                             // declare charracter array
+        strcpy_s(scoreText, scoreString.c_str());        // copy string to a charracter array
 
         iText(1075, 330, "SCORE : ", GLUT_BITMAP_TIMES_ROMAN_24);
         iText(1180, 330, scoreText, GLUT_BITMAP_TIMES_ROMAN_24); // show that charracter array
+        // if (*playerScorePtr >= 0)
+        // {
+
+        // }
+    }
+
+    // high scores
+    else if (*menuItemPtr == menu[2])
+    {
+        iShowImage(0, 0, menuItemWidth, menuItemHeight, iLoadImage("images\\highScores.png"));
+    }
+
+    // levels
+    else if (*menuItemPtr == menu[3])
+    {
+        iShowImage(0, 0, menuItemWidth, menuItemHeight, iLoadImage("images\\levels.png"));
+    }
+
+    // learn
+    else if (*menuItemPtr == menu[4])
+    {
+        iShowImage(0, 0, start_bg_width, start_bg_height, iLoadImage("images\\learn.png"));
+    }
+
+    // about
+    else if (*menuItemPtr == menu[5])
+    {
+        iShowImage(0, 0, start_bg_width, start_bg_height, iLoadImage("images\\about.png"));
     }
 }
 
@@ -392,83 +417,74 @@ void iDraw()
 
 void iMouseMove(int mx, int my)
 {
+    cout << mx << " " << my << endl;
+
 }
 //*******************************************************************ipassiveMouse***********************************************************************//
 void iPassiveMouseMove(int mx, int my)
 {
+    cout << mx << " " << my << endl;
+
 }
 
 void iMouse(int button, int state, int mx, int my)
 {
+
     // when mouse left button is clicked
     if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN)
     {
+        cout << mx << " " << my << endl;
+
         // play game menu item
-        if (game_state == 0)
+        if ((mx >= 132 && mx <= 354) && (my >= 434 && my <= 538))
         {
-            if ((mx >= 132 && mx <= 354) && (my >= 434 && my <= 538))
+            iClear();
+            *menuItemPtr = 1;
+            cout << "Play Game" << endl;
+
+            // set play music value to 1
+            playMusic = 1;
+            *playMusicPtr = 1;
+
+            if (playMusic == 1)
             {
-                cout << "Play Game" << endl;
-
-                // make the menu screen hidden
-                // when play game button is clicked
-                hide_menu_screen();
-
-                // game state = 1
-                // if game state == 1
-                // that means play game is clicked
-                // when play game is clicked
-                // that means game state == 1
-                // and when game state == 1
-                // then game resources function will be called and show the interfaces
-                game_state = 1;
-
-                // set play music value to 1
-                playMusic = 1;
-                *playMusicPtr = 1;
-
-                if (playMusic == 1)
-                {
-                    PlaySound("musics//playGameMusic.wav", NULL, SND_LOOP | SND_ASYNC);
-                }
+                PlaySound("musics//playGameMusic.wav", NULL, SND_LOOP | SND_ASYNC);
             }
+        }
 
-            // high score menu item
-            else if ((mx >= 132 && mx <= 354) && (my >= 273 && my <= 377))
-            {
+        // high score menu item
+        else if ((mx >= 132 && mx <= 354) && (my >= 273 && my <= 377))
+        {
 
-                cout << "High Scores" << endl;
-            }
+            cout << "High Scores" << endl;
+            *menuItemPtr = 2;
+        }
 
-            // Levels menu item
-            else if ((mx >= 132 && mx <= 354) && (my >= 119 && my <= 222))
-            {
-                cout << "Levels" << endl;
-                if (game_state == 0)
-                {
-                    iShowImage(10, 10, menuItemWidth, menuItemHeight, iLoadImage("images\\highScores.png"));
-                    // hide_menu_screen();
-                    cout << "High Scores" << endl;
-                }
-            }
+        // Levels menu item
+        else if ((mx >= 132 && mx <= 354) && (my >= 119 && my <= 222))
+        {
+            cout << "Levels" << endl;
+            *menuItemPtr = 3;
+        }
 
-            // Learn menu item
-            else if ((mx >= 721 && mx <= 942) && (my >= 434 && my <= 538))
-            {
-                cout << "Learn" << endl;
-            }
+        // Learn menu item
+        else if ((mx >= 855 && mx <= 1117) && (my >= 434 && my <= 538))
+        {
+            *menuItemPtr = 4;
+            cout << "Learn" << endl;
+        }
 
-            // about menu item
-            else if ((mx >= 721 && mx <= 942) && (my >= 276 && my <= 380))
-            {
-                cout << "About" << endl;
-            }
+        // about menu item
+        else if ((mx >= 855 && mx <= 1117) && (my >= 276 && my <= 380))
+        {
+            cout << "About" << endl;
+            *menuItemPtr = 5;
+        }
 
-            // quit menu item
-            else if ((mx >= 721 && mx <= 942) && (my >= 118 && my <= 223))
-            {
-                cout << "Quit" << endl;
-            }
+        // quit menu item
+        else if ((mx >= 855 && mx <= 1117) && (my >= 118 && my <= 223))
+        {
+            cout << "Quit" << endl;
         }
     }
 
@@ -498,7 +514,9 @@ void iKeyboard(unsigned char key)
             PlaySound("musics//playGameMusic.wav", NULL, SND_LOOP | SND_ASYNC);
         }
     }
-
+    else if (key == 8) {
+        *menuItemPtr = 0;
+    }
 }
 
 // control ghost green function
@@ -507,7 +525,7 @@ void controlGhostGreen()
 {
 
     // ghost and koko hits themselves
-    // koko will lose 50 points
+    // koko will lose 10 points
     int ghostGreenPower = 10;
 
     // 0 for right, 1 for left, 2 for up and 3 for down direction
@@ -523,7 +541,8 @@ void controlGhostGreen()
         {
             if ((ghost_green_x + 65 == kokoMovePosition_x[x]) && (ghost_green_y == kokoMovePosition_y[x]))
             {
-                ghost_green_x += 65;break;
+                ghost_green_x += 65;
+                break;
             }
         }
 
@@ -540,7 +559,8 @@ void controlGhostGreen()
         {
             if ((ghost_green_x - 65 == kokoMovePosition_x[x]) && (ghost_green_y == kokoMovePosition_y[x]))
             {
-                ghost_green_x -= 65;break;
+                ghost_green_x -= 65;
+                break;
             }
         }
         if ((ghost_green_x == kokoro_x) && (ghost_green_y == kokoro_y))
@@ -556,7 +576,8 @@ void controlGhostGreen()
         {
             if ((ghost_green_x == kokoMovePosition_x[x]) && (ghost_green_y + 65 == kokoMovePosition_y[x]))
             {
-                ghost_green_y += 65;break;
+                ghost_green_y += 65;
+                break;
             }
         }
         if ((ghost_green_x == kokoro_x) && (ghost_green_y == kokoro_y))
@@ -572,7 +593,8 @@ void controlGhostGreen()
         {
             if ((ghost_green_x == kokoMovePosition_x[x]) && (ghost_green_y - 65 == kokoMovePosition_y[x]))
             {
-                ghost_green_y -= 65;break;
+                ghost_green_y -= 65;
+                break;
             }
         }
 
@@ -604,7 +626,8 @@ void controlGhostRed()
         {
             if ((ghost_red_x + 65 == kokoMovePosition_x[x]) && (ghost_red_y == kokoMovePosition_y[x]))
             {
-                ghost_red_x += 65;break;
+                ghost_red_x += 65;
+                break;
             }
         }
 
@@ -621,7 +644,8 @@ void controlGhostRed()
         {
             if ((ghost_red_x - 65 == kokoMovePosition_x[x]) && (ghost_red_y == kokoMovePosition_y[x]))
             {
-                ghost_red_x -= 65;break;
+                ghost_red_x -= 65;
+                break;
             }
         }
         if ((ghost_red_x == kokoro_x) && (ghost_red_y == kokoro_y))
@@ -1087,7 +1111,6 @@ void iSpecialKeyboard(unsigned char key)
         // sets koko img direction to 4 for down direction
         kokoImgDirection = 4;
 
-
         // changing positions to downward directions
         for (int x = 0; x < 50; x++)
         {
@@ -1128,9 +1151,8 @@ int main()
     //  initialize KOKORO window
     iInitialize(screen_width, screen_height, "KOKORO GAME");
 
-
     // machine starts here
     iStart();
-    
+
     return 0;
 }
