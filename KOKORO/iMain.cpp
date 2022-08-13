@@ -1,7 +1,4 @@
 #include "iGraphics.h"
-//#include "function.h"
-//#include "variable.h"
-
 #include <string>
 #include <iostream>
 #include <cstdlib>
@@ -15,9 +12,8 @@ using std::endl;
 using std::string;
 using std::to_string;
 
-// game state
-int game_state = 0;
-int* gameStatePtr = &game_state;
+// level
+int level = 1;
 
 // play music
 int playMusic = 0;
@@ -26,11 +22,6 @@ int* playMusicPtr = &playMusic;
 // score
 int playerScore = 0;
 int* playerScorePtr = &playerScore;
-
-// pill big power
-int pillBigValue = 20;
-// pill small power
-int pillSmallValue = 10;
 
 /// for screen size
 int screen_width = 1300;
@@ -349,7 +340,6 @@ int menu[7] = { 0, 1, 2, 3, 4, 5, 6 };
 int menuItem = menu[0];
 int* menuItemPtr = &menuItem;
 
-
 // menu item height and width
 int menuItemHeight = 650;
 int menuItemWidth = 1300;
@@ -366,8 +356,8 @@ void iDraw()
         iShowImage(0, 0, start_bg_width, start_bg_height, iLoadImage("images\\start_bg.png"));
     }
 
-    // show_game_res();
     // play game
+    // show_game_res();
     else if (*menuItemPtr == menu[1])
     {
         // rendering game user interface
@@ -380,10 +370,6 @@ void iDraw()
 
         iText(1075, 330, "SCORE : ", GLUT_BITMAP_TIMES_ROMAN_24);
         iText(1180, 330, scoreText, GLUT_BITMAP_TIMES_ROMAN_24); // show that charracter array
-        // if (*playerScorePtr >= 0)
-        // {
-
-        // }
     }
 
     // high scores
@@ -409,6 +395,29 @@ void iDraw()
     {
         iShowImage(0, 0, start_bg_width, start_bg_height, iLoadImage("images\\about.png"));
     }
+
+    // checking if first level is finished or not
+    int flag = 1;
+    for (int i = 0; i < 27; i++)
+    {
+        // checking small pills and big pills are eaten or not
+        if (pillSmall_ScoreValue[i] != 0)
+        {
+            flag = 0;
+        }
+    }
+    for (int i = 0; i < 4; i++)
+    {
+        if (pillBig_ScoreValue[i] != 0)
+        {
+            flag = 0;
+        }
+    }
+    if (flag == 1)
+    {
+        cout << "game completed" << endl;
+        // level = 2;
+    }
 }
 
 /*function iMouseMove() is called when the user presses and drags the mouse.
@@ -417,24 +426,17 @@ void iDraw()
 
 void iMouseMove(int mx, int my)
 {
-    cout << mx << " " << my << endl;
-
 }
 //*******************************************************************ipassiveMouse***********************************************************************//
 void iPassiveMouseMove(int mx, int my)
 {
-    cout << mx << " " << my << endl;
-
 }
 
 void iMouse(int button, int state, int mx, int my)
 {
-
     // when mouse left button is clicked
     if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN)
     {
-        cout << mx << " " << my << endl;
-
         // play game menu item
         if ((mx >= 132 && mx <= 354) && (my >= 434 && my <= 538))
         {
@@ -500,7 +502,7 @@ key- holds the ASCII value of the key pressed.
 
 void iKeyboard(unsigned char key)
 {
-    if (key == '\m')
+    if (key == 109)
     {
         // controlling music
         if (playMusic)
@@ -514,7 +516,8 @@ void iKeyboard(unsigned char key)
             PlaySound("musics//playGameMusic.wav", NULL, SND_LOOP | SND_ASYNC);
         }
     }
-    else if (key == 8) {
+    else if (key == 8)
+    {
         *menuItemPtr = 0;
     }
 }
