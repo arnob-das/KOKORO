@@ -322,16 +322,32 @@ void show_game_res()
         iShowImage(kokoro_x, kokoro_y, kokoWidth, kokoHeight, iLoadImage("images\\koko_down.png"));
     }
 
-    // ghost green
-    iShowImage(ghost_green_x, ghost_green_y, 65, 65, iLoadImage("images\\ghost_green.png"));
-    // ghost red
-    iShowImage(ghost_red_x, ghost_red_y, 65, 65, iLoadImage("images\\ghost_red.png"));
-    // ghost violet
-    iShowImage(ghost_violet_x, ghost_violet_y, 65, 65, iLoadImage("images\\ghost_violet.png"));
-    // ghost orange
-    iShowImage(ghost_orange_x, ghost_orange_y, 65, 65, iLoadImage("images\\ghost_orange.png"));
-    // ghost pink
-    iShowImage(ghost_pink_x, ghost_pink_y, 65, 65, iLoadImage("images\\ghost_pink.png"));
+    // level wise ghost
+    // ghost for
+    // level 1
+    if (level == 1)
+    {
+        // ghost green
+        iShowImage(ghost_green_x, ghost_green_y, 65, 65, iLoadImage("images\\ghost_green.png"));
+        // ghost red
+        iShowImage(ghost_red_x, ghost_red_y, 65, 65, iLoadImage("images\\ghost_red.png"));
+        // ghost violet
+        iShowImage(ghost_violet_x, ghost_violet_y, 65, 65, iLoadImage("images\\ghost_violet.png"));
+    }
+
+    else if (level == 2)
+    {
+        // ghost green
+        iShowImage(ghost_green_x, ghost_green_y, 65, 65, iLoadImage("images\\ghost_green.png"));
+        // ghost red
+        iShowImage(ghost_red_x, ghost_red_y, 65, 65, iLoadImage("images\\ghost_red.png"));
+        // ghost violet
+        iShowImage(ghost_violet_x, ghost_violet_y, 65, 65, iLoadImage("images\\ghost_violet.png"));
+        // ghost orange
+        iShowImage(ghost_orange_x, ghost_orange_y, 65, 65, iLoadImage("images\\ghost_orange.png"));
+        // ghost pink
+        iShowImage(ghost_pink_x, ghost_pink_y, 65, 65, iLoadImage("images\\ghost_pink.png"));
+    }
 }
 
 // menu array
@@ -423,12 +439,10 @@ void iDraw()
             flag = 0;
         }
     }
-    // checking if game completed or not
-    if (flag == 1)
+    // checking if level 1 is completed or not
+    // then go to level 2
+    if (flag == 1 && level == 1)
     {
-        cout << "game completed" << endl;
-        level = 2;
-
         // stop the control ghost function because first level is completed
         exitVar = 1;
 
@@ -439,12 +453,25 @@ void iDraw()
         iSetColor(0, 0, 0);
         iText(1095, 73, "Next Level", GLUT_BITMAP_TIMES_ROMAN_24);
     }
+    // checking if level 2 is completed or not
+    //// then go to level 2
+    if (flag == 1 && level == 2)
+    {
+        // stop the control ghost function because first level is completed
+        exitVar = 1;
+        // after level 2 is completed
+        // then go to menu page
+        *menuItemPtr = menu[0];
+    }
 
     // if player score is 0, then stop game
     if (*playerScorePtr <= 0)
     {
         exitVar = 1;
     }
+    
+    // printing player score
+    cout << *playerScorePtr << endl;
 }
 
 /*function iMouseMove() is called when the user presses and drags the mouse.
@@ -514,6 +541,34 @@ void iMouse(int button, int state, int mx, int my)
         else if ((mx >= 855 && mx <= 1117) && (my >= 118 && my <= 223))
         {
             cout << "Quit" << endl;
+        }
+        // next level
+        // when first level is completed
+        else if ((mx >= 1075 && mx <= 1225) && (my >= 50 && my <= 119))
+        {
+            level = 2;
+            // exitVar=1
+
+            // small pill visiable
+            // reinitialize the small pill score value
+            for (int i = 0; i < 27; i++)
+            {
+                pillSmallWidthHeight[i] = 65;
+                pillSmall_ScoreValue[i] = 10;
+            }
+
+            // big pill visiable
+            // reinitialize the big pill score value
+            for (int i = 0; i < 4; i++)
+            {
+
+                pillBigWidthHeight[i] = 65;
+                pillBig_ScoreValue[i] = 20;
+            }
+
+            // reinitialize the koko's previous co-ordinate
+            kokoro_x = 650;
+            kokoro_y = 130;
         }
     }
 
@@ -983,11 +1038,20 @@ void controlGhost()
 {
     if (exitVar == 0)
     {
-        controlGhostGreen();
-        controlGhostRed();
-        controlGhostViolet();
-        controlGhostOrange();
-        controlGhostPink();
+        if (level == 1)
+        {
+            controlGhostGreen();
+            controlGhostRed();
+            controlGhostViolet();
+        }
+        if (level == 2)
+        {
+            controlGhostGreen();
+            controlGhostRed();
+            controlGhostViolet();
+            controlGhostOrange();
+            controlGhostPink();
+        }
     }
 }
 
