@@ -388,14 +388,6 @@ void iDraw()
         exitVar = 0;
         // rendering game user interface
         show_game_res();
-
-        // score text
-        string scoreString = to_string(*playerScorePtr); // convert int to string data type
-        char scoreText[100];                             // declare charracter array
-        strcpy_s(scoreText, scoreString.c_str());        // copy string to a charracter array
-
-        iText(1075, 330, "SCORE : ", GLUT_BITMAP_TIMES_ROMAN_24);
-        iText(1180, 330, scoreText, GLUT_BITMAP_TIMES_ROMAN_24); // show that charracter array
     }
 
     // high scores
@@ -420,6 +412,20 @@ void iDraw()
     else if (*menuItemPtr == menu[5])
     {
         iShowImage(0, 0, start_bg_width, start_bg_height, iLoadImage("images\\about.png"));
+    }
+
+    // score text
+    if (*menuItemPtr == menu[1])
+    {
+        string scoreString = to_string(*playerScorePtr); // convert int to string data type
+        char scoreText[100];                             // declare charracter array
+        strcpy_s(scoreText, scoreString.c_str());        // copy string to a charracter array
+
+        // showing score text in the play game screen
+        iSetColor(255, 255, 255);
+        iText(1075, 330, "SCORE : ", GLUT_BITMAP_TIMES_ROMAN_24);
+        iSetColor(255, 255, 255);
+        iText(1180, 330, scoreText, GLUT_BITMAP_TIMES_ROMAN_24); // show that charracter array
     }
 
     // checking if first level is finished or not
@@ -447,7 +453,7 @@ void iDraw()
         exitVar = 1;
 
         // next level button background
-        iSetColor(255, 255, 255);
+        //iSetColor(255, 255, 255);
         iFilledRectangle(1075, 50, 150, 65);
         // next level button text
         iSetColor(0, 0, 0);
@@ -469,7 +475,7 @@ void iDraw()
     {
         exitVar = 1;
     }
-    
+
     // printing player score
     cout << *playerScorePtr << endl;
 }
