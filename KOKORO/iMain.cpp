@@ -1,7 +1,7 @@
 #include "iGraphics.h"
 #include <string>
 #include <iostream>
-#include <cstdlib>
+//#include <cstdlib>
 #include <cstring>
 #include <sstream>
 using namespace std;
@@ -14,6 +14,12 @@ using std::to_string;
 
 // level
 int level = 1;
+int levelOneCompleted = 0;
+int levelTwoCompleted = 0;
+// live
+int live = 3;
+// game quit variable
+int gameQuit = 0;
 
 // play music
 int playMusic = 0;
@@ -360,10 +366,29 @@ int* menuItemPtr = &menuItem;
 int menuItemHeight = 650;
 int menuItemWidth = 1300;
 
-// exit function
-void exit()
+// reinitialize game resources function
+void reinitializeGameRes()
 {
-    exit(0);
+    // small pill visiable
+    // reinitialize the small pill score value
+    for (int i = 0; i < 27; i++)
+    {
+        pillSmallWidthHeight[i] = 65;
+        pillSmall_ScoreValue[i] = 10;
+    }
+
+    // big pill visiable
+    // reinitialize the big pill score value
+    for (int i = 0; i < 4; i++)
+    {
+
+        pillBigWidthHeight[i] = 65;
+        pillBig_ScoreValue[i] = 20;
+    }
+
+    // reinitialize the koko's previous co-ordinate
+    kokoro_x = 650;
+    kokoro_y = 130;
 }
 
 // exit variable
@@ -451,9 +476,13 @@ void iDraw()
     {
         // stop the control ghost function because first level is completed
         exitVar = 1;
+        // level one is completed
+        levelOneCompleted = 1;
+        // off level two
+        levelTwoCompleted = 0;
 
         // next level button background
-        //iSetColor(255, 255, 255);
+        // iSetColor(255, 255, 255);
         iFilledRectangle(1075, 50, 150, 65);
         // next level button text
         iSetColor(0, 0, 0);
@@ -463,12 +492,32 @@ void iDraw()
     //// then go to level 2
     if (flag == 1 && level == 2)
     {
+        // level two is completed
+        levelTwoCompleted = 1;
+        // off level one
+        levelOneCompleted = 0;
         // stop the control ghost function because first level is completed
         exitVar = 1;
         // after level 2 is completed
-        // then go to menu page
-        *menuItemPtr = menu[0];
+
+        // next level button background
+        // iSetColor(255, 255, 255);
+        iFilledRectangle(1075, 50, 150, 65);
+        // main menu button text
+        iSetColor(0, 0, 0);
+        iText(1095, 73, "Main Menu", GLUT_BITMAP_TIMES_ROMAN_24);
     }
+
+    // showing level one text
+    if ((level == 1) && (levelOneCompleted != 1) && (*menuItemPtr == menu[1])) {
+        iSetColor(255, 255, 255);
+        iText(1180, 500, "Level 1", GLUT_BITMAP_TIMES_ROMAN_24);
+    }
+    else if ((level == 2) && (levelTwoCompleted != 1) && (*menuItemPtr == menu[1])) {
+        iSetColor(255, 255, 255);
+        iText(1180, 500, "Level 2", GLUT_BITMAP_TIMES_ROMAN_24);
+    }
+
 
     // if player score is 0, then stop game
     if (*playerScorePtr <= 0)
@@ -476,8 +525,10 @@ void iDraw()
         exitVar = 1;
     }
 
-    // printing player score
-    cout << *playerScorePtr << endl;
+    // game quit
+    if (gameQuit == 1) {
+        exit(0);
+    }
 }
 
 /*function iMouseMove() is called when the user presses and drags the mouse.
@@ -546,35 +597,27 @@ void iMouse(int button, int state, int mx, int my)
         // quit menu item
         else if ((mx >= 855 && mx <= 1117) && (my >= 118 && my <= 223))
         {
+            gameQuit = 1;
             cout << "Quit" << endl;
         }
-        // next level
-        // when first level is completed
-        else if ((mx >= 1075 && mx <= 1225) && (my >= 50 && my <= 119))
+
+        // first level completed
+        else if ((mx >= 1075 && mx <= 1225) && (my >= 50 && my <= 119) && (level == 1))
         {
             level = 2;
-            // exitVar=1
 
-            // small pill visiable
-            // reinitialize the small pill score value
-            for (int i = 0; i < 27; i++)
-            {
-                pillSmallWidthHeight[i] = 65;
-                pillSmall_ScoreValue[i] = 10;
-            }
+            reinitializeGameRes();
+        }
 
-            // big pill visiable
-            // reinitialize the big pill score value
-            for (int i = 0; i < 4; i++)
-            {
+        // second level completed
+        else if ((mx >= 1075 && mx <= 1225) && (my >= 50 && my <= 119) && (level == 2))
+        {
+            // if level 2 is completed game will finished and ready the game ui resources for first level
+            level = 1;
 
-                pillBigWidthHeight[i] = 65;
-                pillBig_ScoreValue[i] = 20;
-            }
+            reinitializeGameRes(); // reinitialize game resources
 
-            // reinitialize the koko's previous co-ordinate
-            kokoro_x = 650;
-            kokoro_y = 130;
+            *menuItemPtr = menu[0]; // go to menu page
         }
     }
 
