@@ -57,6 +57,13 @@ int ghost_orange_y = 260;
 int ghost_pink_x = 780;
 int ghost_pink_y = 520;
 
+// ghost power
+int ghostGreenPower = 10;
+int ghostRedPower = 50;
+int ghostVioletPower = 10;
+int ghostOrangePower = 10;
+int ghostPinkPower = 10;
+
 // wall width and height
 int wallWidthHeight[50] = {
     65, 65, 65, 65, 65, 65, 65, 65, // 8
@@ -394,6 +401,35 @@ void reinitializeGameRes()
 // exit variable
 int exitVar = 0;
 
+// when ghost and koko hits together
+// koko will loss points
+void kokoHitsGhost()
+{
+    if (*menuItemPtr == menu[1])
+    {
+        if ((ghost_green_x == kokoro_x) && (ghost_green_y == kokoro_y))
+        {
+            playerScore -= ghostGreenPower;
+        }
+        if ((ghost_red_x == kokoro_x) && (ghost_red_y == kokoro_y))
+        {
+            playerScore -= ghostRedPower;
+        }
+        if ((ghost_violet_x == kokoro_x) && (ghost_violet_y == kokoro_y))
+        {
+            playerScore -= ghostVioletPower;
+        }
+        if ((ghost_orange_x == kokoro_x) && (ghost_orange_y == kokoro_y))
+        {
+            playerScore -= ghostOrangePower;
+        }
+        if ((ghost_pink_x == kokoro_x) && (ghost_pink_y == kokoro_y))
+        {
+            playerScore -= ghostPinkPower;
+        }
+    }
+}
+
 //:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::Idraw Here::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::://
 
 void iDraw()
@@ -439,7 +475,7 @@ void iDraw()
         iShowImage(0, 0, start_bg_width, start_bg_height, iLoadImage("images\\about.png"));
     }
 
-    // score text
+    // score text and koko's live
     if (*menuItemPtr == menu[1])
     {
         string scoreString = to_string(*playerScorePtr); // convert int to string data type
@@ -451,6 +487,14 @@ void iDraw()
         iText(1075, 330, "SCORE : ", GLUT_BITMAP_TIMES_ROMAN_24);
         iSetColor(255, 255, 255);
         iText(1180, 330, scoreText, GLUT_BITMAP_TIMES_ROMAN_24); // show that charracter array
+
+        // working on Koko's Live
+        // red live
+        iSetColor(255, 0, 0);
+        iFilledRectangle(990, 550, 250, 65);
+        // green live
+        iSetColor(0, 255, 0);
+        iFilledRectangle(990, 550, 150, 65);
     }
 
     // checking if first level is finished or not
@@ -509,15 +553,16 @@ void iDraw()
     }
 
     // showing level one text
-    if ((level == 1) && (levelOneCompleted != 1) && (*menuItemPtr == menu[1])) {
+    if ((level == 1) && (levelOneCompleted != 1) && (*menuItemPtr == menu[1]))
+    {
         iSetColor(255, 255, 255);
-        iText(1180, 500, "Level 1", GLUT_BITMAP_TIMES_ROMAN_24);
+        iText(1075, 500, "Level 1", GLUT_BITMAP_TIMES_ROMAN_24);
     }
-    else if ((level == 2) && (levelTwoCompleted != 1) && (*menuItemPtr == menu[1])) {
+    else if ((level == 2) && (levelTwoCompleted != 1) && (*menuItemPtr == menu[1]))
+    {
         iSetColor(255, 255, 255);
-        iText(1180, 500, "Level 2", GLUT_BITMAP_TIMES_ROMAN_24);
+        iText(1075, 500, "Level 2", GLUT_BITMAP_TIMES_ROMAN_24);
     }
-
 
     // if player score is 0, then stop game
     if (*playerScorePtr <= 0)
@@ -526,7 +571,8 @@ void iDraw()
     }
 
     // game quit
-    if (gameQuit == 1) {
+    if (gameQuit == 1)
+    {
         exit(0);
     }
 }
@@ -663,7 +709,7 @@ void controlGhostGreen()
 {
     // ghost and koko hits themselves
     // koko will lose 10 points
-    int ghostGreenPower = 10;
+    // int ghostGreenPower = 10;
 
     // 0 for right, 1 for left, 2 for up and 3 for down direction
 
@@ -683,10 +729,10 @@ void controlGhostGreen()
             }
         }
 
-        if ((ghost_green_x == kokoro_x) && (ghost_green_y == kokoro_y))
-        {
-            playerScore -= ghostGreenPower;
-        }
+        // if ((ghost_green_x == kokoro_x) && (ghost_green_y == kokoro_y))
+        // {
+        //     playerScore -= ghostGreenPower;
+        // }
     }
 
     // left direction
@@ -700,10 +746,10 @@ void controlGhostGreen()
                 break;
             }
         }
-        if ((ghost_green_x == kokoro_x) && (ghost_green_y == kokoro_y))
-        {
-            playerScore -= ghostGreenPower;
-        }
+        // if ((ghost_green_x == kokoro_x) && (ghost_green_y == kokoro_y))
+        // {
+        //     playerScore -= ghostGreenPower;
+        // }
     }
 
     // upward direction
@@ -717,10 +763,10 @@ void controlGhostGreen()
                 break;
             }
         }
-        if ((ghost_green_x == kokoro_x) && (ghost_green_y == kokoro_y))
-        {
-            playerScore -= ghostGreenPower;
-        }
+        // if ((ghost_green_x == kokoro_x) && (ghost_green_y == kokoro_y))
+        // {
+        //     playerScore -= ghostGreenPower;
+        // }
     }
 
     // downward direction
@@ -735,10 +781,10 @@ void controlGhostGreen()
             }
         }
 
-        if ((ghost_green_x == kokoro_x) && (ghost_green_y == kokoro_y))
-        {
-            playerScore -= ghostGreenPower;
-        }
+        // if ((ghost_green_x == kokoro_x) && (ghost_green_y == kokoro_y))
+        // {
+        //     playerScore -= ghostGreenPower;
+        // }
     }
 }
 
@@ -748,7 +794,7 @@ void controlGhostRed()
 
     // ghost and koko hits themselves
     // koko will lose 50 points
-    int ghostRedPower = 50;
+    // int ghostRedPower = 50;
 
     // 0 for right, 1 for left, 2 for up and 3 for down direction
 
@@ -768,10 +814,10 @@ void controlGhostRed()
             }
         }
 
-        if ((ghost_red_x == kokoro_x) && (ghost_red_y == kokoro_y))
-        {
-            playerScore -= ghostRedPower;
-        }
+        // if ((ghost_red_x == kokoro_x) && (ghost_red_y == kokoro_y))
+        // {
+        //     playerScore -= ghostRedPower;
+        // }
     }
 
     // left direction
@@ -785,10 +831,10 @@ void controlGhostRed()
                 break;
             }
         }
-        if ((ghost_red_x == kokoro_x) && (ghost_red_y == kokoro_y))
-        {
-            playerScore -= ghostRedPower;
-        }
+        // if ((ghost_red_x == kokoro_x) && (ghost_red_y == kokoro_y))
+        // {
+        //     playerScore -= ghostRedPower;
+        // }
     }
 
     // upward direction
@@ -802,10 +848,10 @@ void controlGhostRed()
                 break;
             }
         }
-        if ((ghost_red_x == kokoro_x) && (ghost_red_y == kokoro_y))
-        {
-            playerScore -= ghostRedPower;
-        }
+        // if ((ghost_red_x == kokoro_x) && (ghost_red_y == kokoro_y))
+        // {
+        //     playerScore -= ghostRedPower;
+        // }
     }
 
     // downward direction
@@ -820,10 +866,10 @@ void controlGhostRed()
             }
         }
 
-        if ((ghost_red_x == kokoro_x) && (ghost_red_y == kokoro_y))
-        {
-            playerScore -= ghostRedPower;
-        }
+        // if ((ghost_red_x == kokoro_x) && (ghost_red_y == kokoro_y))
+        // {
+        //     playerScore -= ghostRedPower;
+        // }
     }
 }
 
@@ -833,7 +879,7 @@ void controlGhostViolet()
 
     // ghost and koko hits themselves
     // koko will lose 50 points
-    int ghostVioletPower = 10;
+    // int ghostVioletPower = 10;
 
     // 0 for right, 1 for left, 2 for up and 3 for down direction
 
@@ -853,10 +899,10 @@ void controlGhostViolet()
             }
         }
 
-        if ((ghost_violet_x == kokoro_x) && (ghost_violet_y == kokoro_y))
-        {
-            playerScore -= ghostVioletPower;
-        }
+        // if ((ghost_violet_x == kokoro_x) && (ghost_violet_y == kokoro_y))
+        // {
+        //     playerScore -= ghostVioletPower;
+        // }
     }
 
     // left direction
@@ -870,10 +916,10 @@ void controlGhostViolet()
                 break;
             }
         }
-        if ((ghost_violet_x == kokoro_x) && (ghost_violet_y == kokoro_y))
-        {
-            playerScore -= ghostVioletPower;
-        }
+        // if ((ghost_violet_x == kokoro_x) && (ghost_violet_y == kokoro_y))
+        // {
+        //     playerScore -= ghostVioletPower;
+        // }
     }
 
     // upward direction
@@ -887,10 +933,10 @@ void controlGhostViolet()
                 break;
             }
         }
-        if ((ghost_violet_x == kokoro_x) && (ghost_violet_y == kokoro_y))
-        {
-            playerScore -= ghostVioletPower;
-        }
+        // if ((ghost_violet_x == kokoro_x) && (ghost_violet_y == kokoro_y))
+        // {
+        //     playerScore -= ghostVioletPower;
+        // }
     }
 
     // downward direction
@@ -905,10 +951,10 @@ void controlGhostViolet()
             }
         }
 
-        if ((ghost_violet_x == kokoro_x) && (ghost_violet_y == kokoro_y))
-        {
-            playerScore -= ghostVioletPower;
-        }
+        // if ((ghost_violet_x == kokoro_x) && (ghost_violet_y == kokoro_y))
+        // {
+        //     playerScore -= ghostVioletPower;
+        // }
     }
 }
 
@@ -918,7 +964,7 @@ void controlGhostOrange()
 
     // ghost and koko hits themselves
     // koko will lose 50 points
-    int ghostOrangePower = 10;
+    // int ghostOrangePower = 10;
 
     // 0 for right, 1 for left, 2 for up and 3 for down direction
 
@@ -938,10 +984,10 @@ void controlGhostOrange()
             }
         }
 
-        if ((ghost_orange_x == kokoro_x) && (ghost_orange_y == kokoro_y))
-        {
-            playerScore -= ghostOrangePower;
-        }
+        // if ((ghost_orange_x == kokoro_x) && (ghost_orange_y == kokoro_y))
+        // {
+        //     playerScore -= ghostOrangePower;
+        // }
     }
 
     // left direction
@@ -955,10 +1001,10 @@ void controlGhostOrange()
                 break;
             }
         }
-        if ((ghost_orange_x == kokoro_x) && (ghost_orange_y == kokoro_y))
-        {
-            playerScore -= ghostOrangePower;
-        }
+        // if ((ghost_orange_x == kokoro_x) && (ghost_orange_y == kokoro_y))
+        // {
+        //     playerScore -= ghostOrangePower;
+        // }
     }
 
     // upward direction
@@ -972,10 +1018,10 @@ void controlGhostOrange()
                 break;
             }
         }
-        if ((ghost_orange_x == kokoro_x) && (ghost_orange_y == kokoro_y))
-        {
-            playerScore -= ghostOrangePower;
-        }
+        // if ((ghost_orange_x == kokoro_x) && (ghost_orange_y == kokoro_y))
+        // {
+        //     playerScore -= ghostOrangePower;
+        // }
     }
 
     // downward direction
@@ -990,10 +1036,10 @@ void controlGhostOrange()
             }
         }
 
-        if ((ghost_orange_x == kokoro_x) && (ghost_orange_y == kokoro_y))
-        {
-            playerScore -= ghostOrangePower;
-        }
+        // if ((ghost_orange_x == kokoro_x) && (ghost_orange_y == kokoro_y))
+        // {
+        //     playerScore -= ghostOrangePower;
+        // }
     }
 }
 
@@ -1003,7 +1049,7 @@ void controlGhostPink()
 
     // ghost and koko hits themselves
     // koko will lose 50 points
-    int ghostPinkPower = 10;
+    // int ghostPinkPower = 10;
 
     // 0 for right, 1 for left, 2 for up and 3 for down direction
 
@@ -1023,10 +1069,10 @@ void controlGhostPink()
             }
         }
 
-        if ((ghost_pink_x == kokoro_x) && (ghost_pink_y == kokoro_y))
-        {
-            playerScore -= ghostPinkPower;
-        }
+        // if ((ghost_pink_x == kokoro_x) && (ghost_pink_y == kokoro_y))
+        // {
+        //     playerScore -= ghostPinkPower;
+        // }
     }
 
     // left direction
@@ -1040,10 +1086,10 @@ void controlGhostPink()
                 break;
             }
         }
-        if ((ghost_pink_x == kokoro_x) && (ghost_pink_y == kokoro_y))
-        {
-            playerScore -= ghostPinkPower;
-        }
+        // if ((ghost_pink_x == kokoro_x) && (ghost_pink_y == kokoro_y))
+        // {
+        //     playerScore -= ghostPinkPower;
+        // }
     }
 
     // upward direction
@@ -1057,10 +1103,10 @@ void controlGhostPink()
                 break;
             }
         }
-        if ((ghost_pink_x == kokoro_x) && (ghost_pink_y == kokoro_y))
-        {
-            playerScore -= ghostPinkPower;
-        }
+        // if ((ghost_pink_x == kokoro_x) && (ghost_pink_y == kokoro_y))
+        // {
+        //     playerScore -= ghostPinkPower;
+        // }
     }
 
     // downward direction
@@ -1075,10 +1121,10 @@ void controlGhostPink()
             }
         }
 
-        if ((ghost_pink_x == kokoro_x) && (ghost_pink_y == kokoro_y))
-        {
-            playerScore -= ghostPinkPower;
-        }
+        // if ((ghost_pink_x == kokoro_x) && (ghost_pink_y == kokoro_y))
+        // {
+        //     playerScore -= ghostPinkPower;
+        // }
     }
 }
 
@@ -1297,6 +1343,8 @@ int main()
 {
     // set control ghost function after every 500 ms
     iSetTimer(500, controlGhost);
+    // koko hits ghost function
+    iSetTimer(500, kokoHitsGhost);
     //  initialize KOKORO window
     iInitialize(screen_width, screen_height, "KOKORO GAME");
 
