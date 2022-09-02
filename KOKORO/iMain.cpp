@@ -21,7 +21,7 @@ ifstream readFile;
 int fileWrittenIndicator = 1;
 
 // score array from file
-int score[5];
+int score[6];
 int p = 0;
 int scoreValue;
 
@@ -616,75 +616,92 @@ void iDraw()
     if (level == 1 && exitVar == 1 && fileWrittenIndicator) {
         if (live <= 0 || playerScore <= 0) {
             cout << "1 not completed" << endl;
-            
+            // counter
             int m = 0;
+            // open file in read mode
             readFile.open("scores.txt");
             while (m < 5) {
+                // store value in score array
                 readFile >> score[m];
                 m++;
             }
+            // close file of read mode
             readFile.close();
-            for (int i = 0;i < 5;i++) {
-                cout << score[i] << endl;
-            }
-            for (int i = 0;i < 5;i++) {
-                if (playerScore >= score[i]) {
-                    score[i] = playerScore;
-                }
-            }
-            for (int i = 0;i < 5;i++) {
-                cout << score[i] << endl;
-            }
-            //file.open("scores.txt", ios::out | ios::app);
-            file.open("scores.txt");
-            if (fileWrittenIndicator == 1) {
-                for (int i = 0;i < 5;i++) {
-                    file << score[i] << endl;
-                }
-                fileWrittenIndicator = 0;
-            }
-            file.close();
-            /*
-            for (int i = 0;i < 5;i++) {
-                if (playerScore >= score[i]) {
-                    score[i] = playerScore;
-                }
-            }
-            for (int i = 0;i < 5;i++) {
-                cout << score[i] << endl;
-            }
-            //file.open("scores.txt", ios::out | ios::app);
-            file.open("scores.txt");
-            if (fileWrittenIndicator == 1) {
-                for (int i = 0;i < 5;i++) {
-                    file << score[i] << endl;
-                }
-                fileWrittenIndicator = 0;
-            }
-            file.close();
-            */
 
+            // print score array
+            for (int i = 0;i < 5;i++) {
+                cout << score[i] << endl;
+            }
+            score[5] = playerScore;
+            // check high score in array with player score
+            for (int i = 0;i < 6;i++) {
+                for (int j = i + 1;j < 6;j++) {
+                    if (score[i] < score[j])
+                    {
+                        int a = score[i];
+                        score[i] = score[j];
+                        score[j] = a;
+                    }
+                }
+            }
+            // print score array
+            for (int i = 0;i < 5;i++) {
+                cout << score[i] << endl;
+            }
+            // open file in write mode
+            file.open("scores.txt");
+            if (fileWrittenIndicator == 1) {
+                for (int i = 0;i < 5;i++) {
+                    // store the updated score in file
+                    file << score[i] << endl;
+                }
+                fileWrittenIndicator = 0;
+            }
+            // close file
+            file.close();
             fileWrittenIndicator = 0;
             cout << "done 1 not completed" << endl;
         }
     }
-    /*
     if (level == 2 && exitVar == 1 && fileWrittenIndicator) {
         if (live <= 0 || playerScore <= 0) {
             cout << "2 not completed" << endl;
-            file.open("scores.txt", ios::out | ios::app);
-            file << playerScore << endl;
-            file.close();
-            fileWrittenIndicator = 0;
-            cout << "done 2 not completed" << endl;
-        }
-    }
-    */
-    if (level == 2 && exitVar == 1 && fileWrittenIndicator) {
-        if (live <= 0 || playerScore <= 0) {
-            cout << "2 not completed" << endl;
-            file.open("scores.txt", ios::out | ios::app);
-            file << playerScore << endl;
+            // counter
+            int m = 0;
+            // open file in read mode
+            readFile.open("scores.txt");
+            while (m < 5) {
+                // store value in score array
+                readFile >> score[m];
+                m++;
+            }
+            // close file of read mode
+            readFile.close();
+
+            // print score array
+            for (int i = 0;i < 5;i++) {
+                cout << score[i] << endl;
+            }
+            // check high score in array with player score
+            for (int i = 0;i < 5;i++) {
+                if (playerScore >= score[i]) {
+                    score[i] = playerScore;
+                }
+            }
+            // print score array
+            for (int i = 0;i < 5;i++) {
+                cout << score[i] << endl;
+            }
+            // open file in write mode
+            file.open("scores.txt");
+            if (fileWrittenIndicator == 1) {
+                for (int i = 0;i < 5;i++) {
+                    // store the updated score in file
+                    file << score[i] << endl;
+                }
+                fileWrittenIndicator = 0;
+            }
+            // close file
             file.close();
             fileWrittenIndicator = 0;
             cout << "done 2 not completed" << endl;
@@ -692,8 +709,42 @@ void iDraw()
     }
     if (lastLevelCompleted == 1 && lastLevelScoreWrittenIndicator == 1) {
         cout << "2 completed" << endl;
-        file.open("scores.txt", ios::out | ios::app);
-        file << playerScore << endl;
+        // counter
+        int m = 0;
+        // open file in read mode
+        readFile.open("scores.txt");
+        while (m < 5) {
+            // store value in score array
+            readFile >> score[m];
+            m++;
+        }
+        // close file of read mode
+        readFile.close();
+
+        // print score array
+        for (int i = 0;i < 5;i++) {
+            cout << score[i] << endl;
+        }
+        // check high score in array with player score
+        for (int i = 0;i < 5;i++) {
+            if (playerScore >= score[i]) {
+                score[i] = playerScore;
+            }
+        }
+        // print score array
+        for (int i = 0;i < 5;i++) {
+            cout << score[i] << endl;
+        }
+        // open file in write mode
+        file.open("scores.txt");
+        if (fileWrittenIndicator == 1) {
+            for (int i = 0;i < 5;i++) {
+                // store the updated score in file
+                file << score[i] << endl;
+            }
+            fileWrittenIndicator = 0;
+        }
+        // close file
         file.close();
         fileWrittenIndicator = 0;
         lastLevelScoreWrittenIndicator = 0;
