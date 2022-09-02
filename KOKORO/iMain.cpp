@@ -371,13 +371,13 @@ void show_game_res()
         // ghost green
         iShowImage(ghost_green_x, ghost_green_y, 65, 65, iLoadImage("images\\ghost_green.png"));
         // ghost red
-        //iShowImage(ghost_red_x, ghost_red_y, 65, 65, iLoadImage("images\\ghost_red.png"));
+        iShowImage(ghost_red_x, ghost_red_y, 65, 65, iLoadImage("images\\ghost_red.png"));
         // ghost violet
-        //iShowImage(ghost_violet_x, ghost_violet_y, 65, 65, iLoadImage("images\\ghost_violet.png"));
+        iShowImage(ghost_violet_x, ghost_violet_y, 65, 65, iLoadImage("images\\ghost_violet.png"));
         // ghost orange
-        //iShowImage(ghost_orange_x, ghost_orange_y, 65, 65, iLoadImage("images\\ghost_orange.png"));
+        iShowImage(ghost_orange_x, ghost_orange_y, 65, 65, iLoadImage("images\\ghost_orange.png"));
         // ghost pink
-        //iShowImage(ghost_pink_x, ghost_pink_y, 65, 65, iLoadImage("images\\ghost_pink.png"));
+        iShowImage(ghost_pink_x, ghost_pink_y, 65, 65, iLoadImage("images\\ghost_pink.png"));
     }
 }
 
@@ -485,7 +485,46 @@ void iDraw()
     // high scores
     else if (*menuItemPtr == menu[2])
     {
+        // counter
+        int m = 0;
+        // open file in read mode
+        readFile.open("scores.txt");
+        while (m < 5) {
+            // store value in score array
+            readFile >> score[m];
+            m++;
+        }
+        // close file of read mode
+        readFile.close();
+
         iShowImage(0, 0, menuItemWidth, menuItemHeight, iLoadImage("images\\highScores.png"));
+        string str_scr_1 = to_string(score[0]);
+        string str_scr_2 = to_string(score[1]);
+        string str_scr_3 = to_string(score[2]);
+        string str_scr_4 = to_string(score[3]);
+        string str_scr_5 = to_string(score[4]);
+        
+
+        char score1[100];
+        char score2[100];
+        char score3[100];
+        char score4[100];
+        char score5[100];
+
+
+        strcpy_s(score1, str_scr_1.c_str());
+        strcpy_s(score2, str_scr_2.c_str());
+        strcpy_s(score3, str_scr_3.c_str());
+        strcpy_s(score4, str_scr_4.c_str());
+        strcpy_s(score5, str_scr_5.c_str());
+
+        // showing high scores score text in the high scores screen
+        iSetColor(255, 255, 255);
+        iText(645, 425, score1, GLUT_BITMAP_TIMES_ROMAN_24);
+        iText(645, 385, score2, GLUT_BITMAP_TIMES_ROMAN_24);
+        iText(645, 345, score3, GLUT_BITMAP_TIMES_ROMAN_24);
+        iText(645, 305, score4, GLUT_BITMAP_TIMES_ROMAN_24);
+        iText(645, 265, score5, GLUT_BITMAP_TIMES_ROMAN_24);
     }
 
     // levels
@@ -682,10 +721,16 @@ void iDraw()
             for (int i = 0;i < 5;i++) {
                 cout << score[i] << endl;
             }
+            score[5] = playerScore;
             // check high score in array with player score
-            for (int i = 0;i < 5;i++) {
-                if (playerScore >= score[i]) {
-                    score[i] = playerScore;
+            for (int i = 0;i < 6;i++) {
+                for (int j = i + 1;j < 6;j++) {
+                    if (score[i] < score[j])
+                    {
+                        int a = score[i];
+                        score[i] = score[j];
+                        score[j] = a;
+                    }
                 }
             }
             // print score array
@@ -725,10 +770,16 @@ void iDraw()
         for (int i = 0;i < 5;i++) {
             cout << score[i] << endl;
         }
+        score[5] = playerScore;
         // check high score in array with player score
-        for (int i = 0;i < 5;i++) {
-            if (playerScore >= score[i]) {
-                score[i] = playerScore;
+        for (int i = 0;i < 6;i++) {
+            for (int j = i + 1;j < 6;j++) {
+                if (score[i] < score[j])
+                {
+                    int a = score[i];
+                    score[i] = score[j];
+                    score[j] = a;
+                }
             }
         }
         // print score array
