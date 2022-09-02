@@ -4,7 +4,6 @@
 //#include <cstdlib>
 #include <cstring>
 #include <sstream>
-#include<fstream>
 using namespace std;
 
 using std::cin;
@@ -13,20 +12,10 @@ using std::endl;
 using std::string;
 using std::to_string;
 
-// file
-ofstream file;
-
-// once file written indicator
-int fileWrittenIndicator = 1;
-
 // level
 int level = 1;
 int levelOneCompleted = 0;
 int levelTwoCompleted = 0;
-// last lastLevelCompleted = 0;
-int lastLevelCompleted = 0;
-// lastLevelScoreWrittenIndicator
-int lastLevelScoreWrittenIndicator = 1;
 // live
 int live = 3;
 
@@ -355,9 +344,9 @@ void show_game_res()
         // ghost green
         iShowImage(ghost_green_x, ghost_green_y, 65, 65, iLoadImage("images\\ghost_green.png"));
         // ghost red
-        //iShowImage(ghost_red_x, ghost_red_y, 65, 65, iLoadImage("images\\ghost_red.png"));
+        iShowImage(ghost_red_x, ghost_red_y, 65, 65, iLoadImage("images\\ghost_red.png"));
         // ghost violet
-        //iShowImage(ghost_violet_x, ghost_violet_y, 65, 65, iLoadImage("images\\ghost_violet.png"));
+        iShowImage(ghost_violet_x, ghost_violet_y, 65, 65, iLoadImage("images\\ghost_violet.png"));
     }
 
     else if (level == 2)
@@ -365,13 +354,13 @@ void show_game_res()
         // ghost green
         iShowImage(ghost_green_x, ghost_green_y, 65, 65, iLoadImage("images\\ghost_green.png"));
         // ghost red
-        //iShowImage(ghost_red_x, ghost_red_y, 65, 65, iLoadImage("images\\ghost_red.png"));
+        iShowImage(ghost_red_x, ghost_red_y, 65, 65, iLoadImage("images\\ghost_red.png"));
         // ghost violet
-        //iShowImage(ghost_violet_x, ghost_violet_y, 65, 65, iLoadImage("images\\ghost_violet.png"));
+        iShowImage(ghost_violet_x, ghost_violet_y, 65, 65, iLoadImage("images\\ghost_violet.png"));
         // ghost orange
-        //iShowImage(ghost_orange_x, ghost_orange_y, 65, 65, iLoadImage("images\\ghost_orange.png"));
+        iShowImage(ghost_orange_x, ghost_orange_y, 65, 65, iLoadImage("images\\ghost_orange.png"));
         // ghost pink
-        //iShowImage(ghost_pink_x, ghost_pink_y, 65, 65, iLoadImage("images\\ghost_pink.png"));
+        iShowImage(ghost_pink_x, ghost_pink_y, 65, 65, iLoadImage("images\\ghost_pink.png"));
     }
 }
 
@@ -550,7 +539,7 @@ void iDraw()
     }
     // checking if level 1 is completed or not
     // then go to level 2
-    if (flag == 1 && level == 1 && live >= 0)
+    if (flag == 1 && level == 1 && live>=0)
     {
         // stop the control ghost function because first level is completed
         exitVar = 1;
@@ -572,7 +561,6 @@ void iDraw()
     {
         // level two is completed
         levelTwoCompleted = 1;
-        lastLevelCompleted = 1;
         // off level one
         levelOneCompleted = 0;
         // stop the control ghost function because first level is completed
@@ -599,47 +587,16 @@ void iDraw()
         iText(1075, 500, "Level 2", GLUT_BITMAP_TIMES_ROMAN_24);
     }
 
+    // if player score is 0, then stop game
+    if (*playerScorePtr < 0 || live == 0)
+    {
+        exitVar = 1;
+    }
+
     // working on live
     if (live == 0) {
         exitVar = 1;
     }
-
-    // working on file
-
-    if (level == 1 && exitVar == 1 && fileWrittenIndicator) {
-        if (live <= 0 || playerScore <= 0) {
-            cout << "1 not completed" << endl;
-            file.open("scores.txt", ios::out | ios::app);
-            file << playerScore << endl;
-            file.close();
-            fileWrittenIndicator = 0;
-            cout << "done 1 not completed" << endl;
-        }
-    }
-    if (level == 2 && exitVar == 1 && fileWrittenIndicator) {
-        if (live <= 0 || playerScore <= 0) {
-            cout << "2 not completed" << endl;
-            file.open("scores.txt", ios::out | ios::app);
-            file << playerScore << endl;
-            file.close();
-            fileWrittenIndicator = 0;
-            cout << "done 2 not completed" << endl;
-        }
-    }
-    if (lastLevelCompleted == 1 && lastLevelScoreWrittenIndicator == 1) {
-        cout << "2 completed" << endl;
-        file.open("scores.txt", ios::out | ios::app);
-        file << playerScore << endl;
-        file.close();
-        fileWrittenIndicator = 0;
-        lastLevelScoreWrittenIndicator = 0;
-        cout << "done 2 completed" << endl;
-        lastLevelScoreWrittenIndicator = 0;
-        lastLevelCompleted = 0;
-    }
-    
-    
-    
 
     // game quit
     if (gameQuit == 1)
@@ -1224,6 +1181,7 @@ void controlGhost()
 // void run ghost
 /*
 void runGhost() {
+    
     // koko hits ghost function
     int setTimer = 500;
     if (level == 1) {
@@ -1288,7 +1246,7 @@ void iSpecialKeyboard(unsigned char key)
                 }
             }
             // for eating small pill
-            for (int x = 0; x < 27; x++)
+            for (int x = 0; x < 31; x++)
             {
                 if (pillSmall_x[x] == kokoro_x && pillSmall_y[x] == kokoro_y)
                 {
@@ -1338,7 +1296,7 @@ void iSpecialKeyboard(unsigned char key)
                 }
             }
             // for eating small pill
-            for (int x = 0; x < 27; x++)
+            for (int x = 0; x < 31; x++)
             {
                 if (pillSmall_x[x] == kokoro_x && pillSmall_y[x] == kokoro_y)
                 {
@@ -1379,7 +1337,7 @@ void iSpecialKeyboard(unsigned char key)
                 }
             }
             // for eating small pill
-            for (int x = 0; x < 27; x++)
+            for (int x = 0; x < 31; x++)
             {
                 if (pillSmall_x[x] == kokoro_x && pillSmall_y[x] == kokoro_y)
                 {
@@ -1422,7 +1380,7 @@ void iSpecialKeyboard(unsigned char key)
                 }
             }
             // for eating small pill
-            for (int x = 0; x < 27; x++)
+            for (int x = 0; x < 31; x++)
             {
                 if (pillSmall_x[x] == kokoro_x && pillSmall_y[x] == kokoro_y)
                 {
@@ -1437,11 +1395,19 @@ void iSpecialKeyboard(unsigned char key)
 
 int main()
 {
+    // koko hits ghost function
+    int setTimer = 500;
+    if (level == 1) {
+        setTimer = 500;
+    }
+    else if (level == 2) {
+        setTimer = 100;
+    }
     // set control ghost function after every setTimer variable ms
-    iSetTimer(500, controlGhost);
+    iSetTimer(setTimer, controlGhost);
     // set hit ghotst function after every setTimer variable ms
-    iSetTimer(500, kokoHitsGhost);
-
+    iSetTimer(setTimer, kokoHitsGhost);
+    
     //  initialize KOKORO window
     iInitialize(screen_width, screen_height, "KOKORO GAME");
 
