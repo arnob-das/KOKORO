@@ -15,9 +15,15 @@ using std::to_string;
 
 // file
 ofstream file;
+ifstream readFile;
 
 // once file written indicator
 int fileWrittenIndicator = 1;
+
+// score array from file
+int score[5];
+int p = 0;
+int scoreValue;
 
 // level
 int level = 1;
@@ -355,9 +361,9 @@ void show_game_res()
         // ghost green
         iShowImage(ghost_green_x, ghost_green_y, 65, 65, iLoadImage("images\\ghost_green.png"));
         // ghost red
-        //iShowImage(ghost_red_x, ghost_red_y, 65, 65, iLoadImage("images\\ghost_red.png"));
+        iShowImage(ghost_red_x, ghost_red_y, 65, 65, iLoadImage("images\\ghost_red.png"));
         // ghost violet
-        //iShowImage(ghost_violet_x, ghost_violet_y, 65, 65, iLoadImage("images\\ghost_violet.png"));
+        iShowImage(ghost_violet_x, ghost_violet_y, 65, 65, iLoadImage("images\\ghost_violet.png"));
     }
 
     else if (level == 2)
@@ -605,17 +611,75 @@ void iDraw()
     }
 
     // working on file
+    
 
     if (level == 1 && exitVar == 1 && fileWrittenIndicator) {
         if (live <= 0 || playerScore <= 0) {
             cout << "1 not completed" << endl;
-            file.open("scores.txt", ios::out | ios::app);
-            file << playerScore << endl;
+            
+            int m = 0;
+            readFile.open("scores.txt");
+            while (m < 5) {
+                readFile >> score[m];
+                m++;
+            }
+            readFile.close();
+            for (int i = 0;i < 5;i++) {
+                cout << score[i] << endl;
+            }
+            for (int i = 0;i < 5;i++) {
+                if (playerScore >= score[i]) {
+                    score[i] = playerScore;
+                }
+            }
+            for (int i = 0;i < 5;i++) {
+                cout << score[i] << endl;
+            }
+            //file.open("scores.txt", ios::out | ios::app);
+            file.open("scores.txt");
+            if (fileWrittenIndicator == 1) {
+                for (int i = 0;i < 5;i++) {
+                    file << score[i] << endl;
+                }
+                fileWrittenIndicator = 0;
+            }
             file.close();
+            /*
+            for (int i = 0;i < 5;i++) {
+                if (playerScore >= score[i]) {
+                    score[i] = playerScore;
+                }
+            }
+            for (int i = 0;i < 5;i++) {
+                cout << score[i] << endl;
+            }
+            //file.open("scores.txt", ios::out | ios::app);
+            file.open("scores.txt");
+            if (fileWrittenIndicator == 1) {
+                for (int i = 0;i < 5;i++) {
+                    file << score[i] << endl;
+                }
+                fileWrittenIndicator = 0;
+            }
+            file.close();
+            */
+
             fileWrittenIndicator = 0;
             cout << "done 1 not completed" << endl;
         }
     }
+    /*
+    if (level == 2 && exitVar == 1 && fileWrittenIndicator) {
+        if (live <= 0 || playerScore <= 0) {
+            cout << "2 not completed" << endl;
+            file.open("scores.txt", ios::out | ios::app);
+            file << playerScore << endl;
+            file.close();
+            fileWrittenIndicator = 0;
+            cout << "done 2 not completed" << endl;
+        }
+    }
+    */
     if (level == 2 && exitVar == 1 && fileWrittenIndicator) {
         if (live <= 0 || playerScore <= 0) {
             cout << "2 not completed" << endl;
