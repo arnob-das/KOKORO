@@ -18,6 +18,7 @@ int levelOneCompleted = 0;
 int levelTwoCompleted = 0;
 // live
 int live = 3;
+
 // game quit variable
 int gameQuit = 0;
 
@@ -396,6 +397,14 @@ void reinitializeGameRes()
     // reinitialize the koko's previous co-ordinate
     kokoro_x = 650;
     kokoro_y = 130;
+
+    // game live
+    if (level == 1) {
+        live = 3;
+    }
+    else if (level == 2) {
+        live = 5;
+    }
 }
 
 // exit variable
@@ -410,22 +419,27 @@ void kokoHitsGhost()
         if ((ghost_green_x == kokoro_x) && (ghost_green_y == kokoro_y))
         {
             playerScore -= ghostGreenPower;
+            live--;
         }
         if ((ghost_red_x == kokoro_x) && (ghost_red_y == kokoro_y))
         {
             playerScore -= ghostRedPower;
+            live--;
         }
         if ((ghost_violet_x == kokoro_x) && (ghost_violet_y == kokoro_y))
         {
             playerScore -= ghostVioletPower;
+            live--;
         }
         if ((ghost_orange_x == kokoro_x) && (ghost_orange_y == kokoro_y))
         {
             playerScore -= ghostOrangePower;
+            live--;
         }
         if ((ghost_pink_x == kokoro_x) && (ghost_pink_y == kokoro_y))
         {
             playerScore -= ghostPinkPower;
+            live--;
         }
     }
 }
@@ -489,12 +503,21 @@ void iDraw()
         iText(1180, 330, scoreText, GLUT_BITMAP_TIMES_ROMAN_24); // show that charracter array
 
         // working on Koko's Live
-        // red live
-        iSetColor(255, 0, 0);
-        iFilledRectangle(990, 550, 250, 65);
-        // green live
-        iSetColor(0, 255, 0);
-        iFilledRectangle(990, 550, 150, 65);
+        int redLiveDx;
+        if (level == 1) {
+            redLiveDx = 150;
+        }
+        else if (level == 2) {
+            redLiveDx = 250;
+        }
+        if (live >= 0) {
+            // red live
+            iSetColor(255, 0, 0);
+            iFilledRectangle(990, 550, redLiveDx, 65);
+            // green live
+            iSetColor(0, 255, 0);
+            iFilledRectangle(990, 550, 50 * live, 65);
+        }
     }
 
     // checking if first level is finished or not
@@ -516,7 +539,7 @@ void iDraw()
     }
     // checking if level 1 is completed or not
     // then go to level 2
-    if (flag == 1 && level == 1)
+    if (flag == 1 && level == 1 && live >= 0)
     {
         // stop the control ghost function because first level is completed
         exitVar = 1;
@@ -565,8 +588,13 @@ void iDraw()
     }
 
     // if player score is 0, then stop game
-    if (*playerScorePtr <= 0)
+    if (*playerScorePtr < 0 || live == 0)
     {
+        exitVar = 1;
+    }
+
+    // working on live
+    if (live == 0) {
         exitVar = 1;
     }
 
@@ -1150,6 +1178,25 @@ void controlGhost()
     }
 }
 
+// void run ghost
+/*
+void runGhost() {
+
+    // koko hits ghost function
+    int setTimer = 500;
+    if (level == 1) {
+        setTimer = 500;
+    }
+    else if (level == 2) {
+        setTimer = 100;
+    }
+    // set control ghost function after every setTimer variable ms
+    iSetTimer(setTimer, controlGhost);
+    // set hit ghotst function after every setTimer variable ms
+    iSetTimer(setTimer, kokoHitsGhost);
+}
+*/
+
 /*
 function iSpecialKeyboard() is called whenver user hits special keys like-
 function keys, home, end, pg up, pg down, arraows etc. you have to use
@@ -1165,46 +1212,48 @@ void iSpecialKeyboard(unsigned char key)
     // RIGHT KEY PRESSED
     if (key == GLUT_KEY_RIGHT)
     {
-        kokoImgDirection = 1;
+        if (exitVar == 0) {
+            kokoImgDirection = 1;
 
-        // move koko from right side to left side
-        if (kokoro_x == 910 && kokoro_y == 195)
-        {
-            kokoro_x = 325;
-        }
-        else if (kokoro_x == 910 && kokoro_y == 390)
-        {
-            kokoro_x = 325;
-        }
-
-        // changing positions to right
-        for (int x = 0; x < 50; x++)
-        {
-            if ((kokoro_x + 65 == kokoMovePosition_x[x]) && (kokoro_y == kokoMovePosition_y[x]))
+            // move koko from right side to left side
+            if (kokoro_x == 910 && kokoro_y == 195)
             {
-                kokoro_x += 65;
-                break;
+                kokoro_x = 325;
             }
-        }
-
-        // for eating pill big
-        for (int x = 0; x < 4; x++)
-        {
-            if (pillBig_x[x] == kokoro_x && pillBig_y[x] == kokoro_y)
+            else if (kokoro_x == 910 && kokoro_y == 390)
             {
-                pillBigWidthHeight[x] = 0;
-                playerScore += pillBig_ScoreValue[x];
-                pillBig_ScoreValue[x] = 0;
+                kokoro_x = 325;
             }
-        }
-        // for eating small pill
-        for (int x = 0; x < 31; x++)
-        {
-            if (pillSmall_x[x] == kokoro_x && pillSmall_y[x] == kokoro_y)
+
+            // changing positions to right
+            for (int x = 0; x < 50; x++)
             {
-                pillSmallWidthHeight[x] = 0;
-                playerScore += pillSmall_ScoreValue[x];
-                pillSmall_ScoreValue[x] = 0;
+                if ((kokoro_x + 65 == kokoMovePosition_x[x]) && (kokoro_y == kokoMovePosition_y[x]))
+                {
+                    kokoro_x += 65;
+                    break;
+                }
+            }
+
+            // for eating pill big
+            for (int x = 0; x < 4; x++)
+            {
+                if (pillBig_x[x] == kokoro_x && pillBig_y[x] == kokoro_y)
+                {
+                    pillBigWidthHeight[x] = 0;
+                    playerScore += pillBig_ScoreValue[x];
+                    pillBig_ScoreValue[x] = 0;
+                }
+            }
+            // for eating small pill
+            for (int x = 0; x < 31; x++)
+            {
+                if (pillSmall_x[x] == kokoro_x && pillSmall_y[x] == kokoro_y)
+                {
+                    pillSmallWidthHeight[x] = 0;
+                    playerScore += pillSmall_ScoreValue[x];
+                    pillSmall_ScoreValue[x] = 0;
+                }
             }
         }
     }
@@ -1212,48 +1261,49 @@ void iSpecialKeyboard(unsigned char key)
     // LEFT KEY PRESSED
     if (key == GLUT_KEY_LEFT)
     {
-        // controlling koko
 
-        // sets koko img direction to 2 for left direction
-        kokoImgDirection = 2;
+        if (exitVar == 0) {
+            // sets koko img direction to 2 for left direction
+            kokoImgDirection = 2;
 
-        // moves koko from left to right in same y co-ordinate
-        if (kokoro_x == 325 && kokoro_y == 195)
-        {
-            kokoro_x = 910;
-        }
-        if (kokoro_x == 325 && kokoro_y == 390)
-        {
-            kokoro_x = 910;
-        }
-        // moves koko to left
-        for (int x = 0; x < 50; x++)
-        {
-            if ((kokoro_x - 65 == kokoMovePosition_x[x]) && (kokoro_y == kokoMovePosition_y[x]))
+            // moves koko from left to right in same y co-ordinate
+            if (kokoro_x == 325 && kokoro_y == 195)
             {
-                kokoro_x -= 65;
-                break;
+                kokoro_x = 910;
             }
-        }
-
-        // for eating pill big
-        for (int x = 0; x < 4; x++)
-        {
-            if (pillBig_x[x] == kokoro_x && pillBig_y[x] == kokoro_y)
+            if (kokoro_x == 325 && kokoro_y == 390)
             {
-                pillBigWidthHeight[x] = 0;
-                playerScore += pillBig_ScoreValue[x];
-                pillBig_ScoreValue[x] = 0;
+                kokoro_x = 910;
             }
-        }
-        // for eating small pill
-        for (int x = 0; x < 31; x++)
-        {
-            if (pillSmall_x[x] == kokoro_x && pillSmall_y[x] == kokoro_y)
+            // moves koko to left
+            for (int x = 0; x < 50; x++)
             {
-                pillSmallWidthHeight[x] = 0;
-                playerScore += pillSmall_ScoreValue[x];
-                pillSmall_ScoreValue[x] = 0;
+                if ((kokoro_x - 65 == kokoMovePosition_x[x]) && (kokoro_y == kokoMovePosition_y[x]))
+                {
+                    kokoro_x -= 65;
+                    break;
+                }
+            }
+
+            // for eating pill big
+            for (int x = 0; x < 4; x++)
+            {
+                if (pillBig_x[x] == kokoro_x && pillBig_y[x] == kokoro_y)
+                {
+                    pillBigWidthHeight[x] = 0;
+                    playerScore += pillBig_ScoreValue[x];
+                    pillBig_ScoreValue[x] = 0;
+                }
+            }
+            // for eating small pill
+            for (int x = 0; x < 31; x++)
+            {
+                if (pillSmall_x[x] == kokoro_x && pillSmall_y[x] == kokoro_y)
+                {
+                    pillSmallWidthHeight[x] = 0;
+                    playerScore += pillSmall_ScoreValue[x];
+                    pillSmall_ScoreValue[x] = 0;
+                }
             }
         }
     }
@@ -1262,37 +1312,39 @@ void iSpecialKeyboard(unsigned char key)
     if (key == GLUT_KEY_UP)
     {
 
-        // controlling koko
+        if (exitVar == 0) {
+            // controlling koko
 
-        kokoImgDirection = 3;
+            kokoImgDirection = 3;
 
-        for (int x = 0; x < 50; x++)
-        {
-            if ((kokoro_x == kokoMovePosition_x[x]) && (kokoro_y + 65 == kokoMovePosition_y[x]))
+            for (int x = 0; x < 50; x++)
             {
-                kokoro_y += 65;
-                break;
+                if ((kokoro_x == kokoMovePosition_x[x]) && (kokoro_y + 65 == kokoMovePosition_y[x]))
+                {
+                    kokoro_y += 65;
+                    break;
+                }
             }
-        }
 
-        // for eating pill big
-        for (int x = 0; x < 4; x++)
-        {
-            if (pillBig_x[x] == kokoro_x && pillBig_y[x] == kokoro_y)
+            // for eating pill big
+            for (int x = 0; x < 4; x++)
             {
-                pillBigWidthHeight[x] = 0;
-                playerScore += pillBig_ScoreValue[x];
-                pillBig_ScoreValue[x] = 0;
+                if (pillBig_x[x] == kokoro_x && pillBig_y[x] == kokoro_y)
+                {
+                    pillBigWidthHeight[x] = 0;
+                    playerScore += pillBig_ScoreValue[x];
+                    pillBig_ScoreValue[x] = 0;
+                }
             }
-        }
-        // for eating small pill
-        for (int x = 0; x < 31; x++)
-        {
-            if (pillSmall_x[x] == kokoro_x && pillSmall_y[x] == kokoro_y)
+            // for eating small pill
+            for (int x = 0; x < 31; x++)
             {
-                pillSmallWidthHeight[x] = 0;
-                playerScore += pillSmall_ScoreValue[x];
-                pillSmall_ScoreValue[x] = 0;
+                if (pillSmall_x[x] == kokoro_x && pillSmall_y[x] == kokoro_y)
+                {
+                    pillSmallWidthHeight[x] = 0;
+                    playerScore += pillSmall_ScoreValue[x];
+                    pillSmall_ScoreValue[x] = 0;
+                }
             }
         }
     }
@@ -1301,39 +1353,41 @@ void iSpecialKeyboard(unsigned char key)
     if (key == GLUT_KEY_DOWN)
     {
 
-        // controlling koko
+        if (exitVar == 0) {
+            // controlling koko
 
         // sets koko img direction to 4 for down direction
-        kokoImgDirection = 4;
+            kokoImgDirection = 4;
 
-        // changing positions to downward directions
-        for (int x = 0; x < 50; x++)
-        {
-            if ((kokoro_x == kokoMovePosition_x[x]) && (kokoro_y - 65 == kokoMovePosition_y[x]))
+            // changing positions to downward directions
+            for (int x = 0; x < 50; x++)
             {
-                kokoro_y -= 65;
-                break;
+                if ((kokoro_x == kokoMovePosition_x[x]) && (kokoro_y - 65 == kokoMovePosition_y[x]))
+                {
+                    kokoro_y -= 65;
+                    break;
+                }
             }
-        }
 
-        // for eating pill big
-        for (int x = 0; x < 4; x++)
-        {
-            if (pillBig_x[x] == kokoro_x && pillBig_y[x] == kokoro_y)
+            // for eating pill big
+            for (int x = 0; x < 4; x++)
             {
-                pillBigWidthHeight[x] = 0;
-                playerScore += pillBig_ScoreValue[x];
-                pillBig_ScoreValue[x] = 0;
+                if (pillBig_x[x] == kokoro_x && pillBig_y[x] == kokoro_y)
+                {
+                    pillBigWidthHeight[x] = 0;
+                    playerScore += pillBig_ScoreValue[x];
+                    pillBig_ScoreValue[x] = 0;
+                }
             }
-        }
-        // for eating small pill
-        for (int x = 0; x < 31; x++)
-        {
-            if (pillSmall_x[x] == kokoro_x && pillSmall_y[x] == kokoro_y)
+            // for eating small pill
+            for (int x = 0; x < 31; x++)
             {
-                pillSmallWidthHeight[x] = 0;
-                playerScore += pillSmall_ScoreValue[x];
-                pillSmall_ScoreValue[x] = 0;
+                if (pillSmall_x[x] == kokoro_x && pillSmall_y[x] == kokoro_y)
+                {
+                    pillSmallWidthHeight[x] = 0;
+                    playerScore += pillSmall_ScoreValue[x];
+                    pillSmall_ScoreValue[x] = 0;
+                }
             }
         }
     }
@@ -1341,10 +1395,19 @@ void iSpecialKeyboard(unsigned char key)
 
 int main()
 {
-    // set control ghost function after every 500 ms
-    iSetTimer(500, controlGhost);
     // koko hits ghost function
-    iSetTimer(500, kokoHitsGhost);
+    int setTimer = 500;
+    if (level == 1) {
+        setTimer = 500;
+    }
+    else if (level == 2) {
+        setTimer = 100;
+    }
+    // set control ghost function after every setTimer variable ms
+    iSetTimer(setTimer, controlGhost);
+    // set hit ghotst function after every setTimer variable ms
+    iSetTimer(setTimer, kokoHitsGhost);
+
     //  initialize KOKORO window
     iInitialize(screen_width, screen_height, "KOKORO GAME");
 
