@@ -495,7 +495,9 @@ void iDraw()
             m++;
         }
         // close file of read mode
-        readFile.close();
+        //readFile.close();
+        //cout << "read file closed" << endl;
+
 
         iShowImage(0, 0, menuItemWidth, menuItemHeight, iLoadImage("images\\highScores.png"));
         string str_scr_1 = to_string(score[0]);
@@ -650,8 +652,9 @@ void iDraw()
     }
 
     // working on file
-    
+    // to permanently store scores data in files
 
+    // if level 1 is not completed
     if (level == 1 && exitVar == 1 && fileWrittenIndicator) {
         if (live <= 0 || playerScore <= 0) {
             cout << "1 not completed" << endl;
@@ -666,6 +669,7 @@ void iDraw()
             }
             // close file of read mode
             readFile.close();
+            cout << "read file closed" << endl;
 
             // print score array
             for (int i = 0;i < 5;i++) {
@@ -698,10 +702,12 @@ void iDraw()
             }
             // close file
             file.close();
+            cout << "file closed" << endl;
             fileWrittenIndicator = 0;
             cout << "done 1 not completed" << endl;
         }
     }
+    // if level 1 completed but level 2 not completed
     if (level == 2 && exitVar == 1 && fileWrittenIndicator) {
         if (live <= 0 || playerScore <= 0) {
             cout << "2 not completed" << endl;
@@ -748,10 +754,13 @@ void iDraw()
             }
             // close file
             file.close();
+            cout << "file closed" << endl;
             fileWrittenIndicator = 0;
             cout << "done 2 not completed" << endl;
         }
     }
+    // if level 2 completed
+    // that means level 1 and level 2 both are completed
     if (lastLevelCompleted == 1 && lastLevelScoreWrittenIndicator == 1) {
         cout << "2 completed" << endl;
         // counter
@@ -797,6 +806,7 @@ void iDraw()
         }
         // close file
         file.close();
+        cout << "file closed" << endl;
         fileWrittenIndicator = 0;
         lastLevelScoreWrittenIndicator = 0;
         cout << "done 2 completed" << endl;
@@ -810,6 +820,8 @@ void iDraw()
     // game quit
     if (gameQuit == 1)
     {
+        // close the read file while exit the game
+        //readFile.close();
         exit(0);
     }
 }
@@ -935,6 +947,10 @@ void iKeyboard(unsigned char key)
         if (menuItem = menu[1])
         {
             exitVar = 1;
+        }
+        if (menuItem = menu[2]) {
+            file.close();
+            cout << "read file closed" << endl;
         }
         *menuItemPtr = 0;
     }
