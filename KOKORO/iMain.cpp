@@ -2,7 +2,7 @@
 #include <string>
 #include <iostream>
 //#include <cstdlib>
-#include <cstring>
+#include <cstring>=
 #include <sstream>
 #include<fstream>
 using namespace std;
@@ -422,6 +422,20 @@ void reinitializeGameRes()
     else if (level == 2) {
         live = 5;
     }
+    if (lastLevelCompleted == 1) {
+        *playerScorePtr = 0;
+    }
+    if (level == 1) {
+        if (live <= 0 || playerScore <= 0) {
+            *playerScorePtr = 0;
+        }
+    }
+    if (level == 2) {
+        if (live <= 0 || playerScore <= 0) {
+            *playerScorePtr = 0;
+        }
+    }
+
 }
 
 // exit variable
@@ -857,6 +871,21 @@ void iMouse(int button, int state, int mx, int my)
             if (playMusic == 1)
             {
                 PlaySound("musics//playGameMusic.wav", NULL, SND_LOOP | SND_ASYNC);
+            }
+
+            // reset game
+            if (lastLevelCompleted == 1) {
+                reinitializeGameRes();
+            }
+            if (level == 1) {
+                if (live <= 0 || playerScore <= 0) {
+                    reinitializeGameRes();
+                }
+            }
+            if (level == 2) {
+                if (live <= 0 || playerScore <= 0) {
+                    reinitializeGameRes();
+                }
             }
         }
 
